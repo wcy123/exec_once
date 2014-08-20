@@ -75,6 +75,13 @@ static void EXEC_ONCE_HELPER(f,_exec_once)()    \
     }                                           \
     EXEC_ONCE(EXEC_ONCE_DO_ID(__LINE__))
 
+#define EXEC_ONCE_DO_WITH_TAG(tag,expr)         \
+    static void EXEC_ONCE_DO_ID(tag)(void)      \
+    {                                           \
+        expr                                    \
+            }                                   \
+    EXEC_ONCE(EXEC_ONCE_DO_ID(tag))
+
 
 
 #define EXEC_ONCE_START                         \
