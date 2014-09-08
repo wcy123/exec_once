@@ -1,4 +1,4 @@
-all: test_exec_once_1
+all: test_exec_once_1 
 	./test_exec_once_1
 
 test_exec_once_1: test_exec_once_1.o

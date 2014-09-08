@@ -83,6 +83,16 @@ static void EXEC_ONCE_HELPER(f,_exec_once)()    \
     EXEC_ONCE_DO_WITH_TAG(EXEC_ONCE_DO_UNIQUE_ID(s,__COUNTER__),expr)
 
 
+#define EXEC_ONCE_PROGN_ID1(tag) do__begin__ ##tag## __do_end
+#define EXEC_ONCE_PROGN_ID(tag) EXEC_ONCE_PROGN_ID1(tag)
+#define EXEC_ONCE_PROGN_UNIQUE_ID1(tag,counter)  tag ## counter
+#define EXEC_ONCE_PROGN_UNIQUE_ID(tag,counter)  EXEC_ONCE_PROGN_UNIQUE_ID1(tag,counter)
+#define EXEC_ONCE_PROGN_WITH_TAG(tag)              \
+    static void EXEC_ONCE_PROGN_ID(tag)(void);     \
+    EXEC_ONCE(EXEC_ONCE_PROGN_ID(tag))             \
+    static void EXEC_ONCE_PROGN_ID(tag)(void) 
+#define EXEC_ONCE_PROGN EXEC_ONCE_PROGN_WITH_TAG(EXEC_ONCE_PROGN_UNIQUE_ID(s,__COUNTER__))
+
 
 #define EXEC_ONCE_START                         \
 __attribute__((constructor))                    \
