@@ -68,21 +68,6 @@ static void EXEC_ONCE_HELPER(f,_exec_once)()    \
     exec_once_register(&x);                     \
 }
 
-#define EXEC_ONCE_DO_ID1(tag) do__begin__ ##tag## __do_end
-#define EXEC_ONCE_DO_ID(tag) EXEC_ONCE_DO_ID1(tag)
-#define EXEC_ONCE_DO_UNIQUE_ID1(tag,counter)  tag ## counter
-#define EXEC_ONCE_DO_UNIQUE_ID(tag,counter)  EXEC_ONCE_DO_UNIQUE_ID1(tag,counter)
-#define EXEC_ONCE_DO_WITH_TAG(tag,expr)         \
-    static void EXEC_ONCE_DO_ID(tag)(void)      \
-    {                                           \
-        expr                                    \
-    }                                           \
-    EXEC_ONCE(EXEC_ONCE_DO_ID(tag))
-
-#define EXEC_ONCE_DO(expr) \
-    EXEC_ONCE_DO_WITH_TAG(EXEC_ONCE_DO_UNIQUE_ID(s,__COUNTER__),expr)
-
-
 #define EXEC_ONCE_PROGN_ID1(tag) do__begin__ ##tag## __do_end
 #define EXEC_ONCE_PROGN_ID(tag) EXEC_ONCE_PROGN_ID1(tag)
 #define EXEC_ONCE_PROGN_UNIQUE_ID1(tag,counter)  tag ## counter
