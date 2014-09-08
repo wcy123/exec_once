@@ -28,6 +28,8 @@ INTERFACE MACROS:
   If there is no such constructor function, you should invoke
   `exec_once_fun()` manually.
 
+  this macro must be at the end of a transform unit.
+
  */
 
 typedef struct exec_once_s {
@@ -88,3 +90,4 @@ static void exec_once_main()                    \
 {                                               \
     exec_once_run();                            \
 }
+
