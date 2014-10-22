@@ -99,7 +99,7 @@ void exec_once_run(exec_once_t * p)
 #define EXEC_ONCE_PROGN EXEC_ONCE_PROGN_WITH_TAG(EXEC_ONCE_PROGN_UNIQUE_ID(s,__COUNTER__))
 
 
-#define EXEC_ONCE_START
+//#define EXEC_ONCE_START
     
 
 #ifndef EXEC_ONCE_DEPENDS
