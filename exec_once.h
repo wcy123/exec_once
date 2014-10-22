@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stdio.h>
 /*
 
   A transform unit contains an independt execute list, which is belong
@@ -85,14 +85,11 @@ void exec_once_run(exec_once_t * p)
         exec_once_register(&x,__FILE__,__LINE__);       \
     }
 
-#define EXEC_WITH_COUNTER(m) m(EXEC_WITH_COUNTER_EVAL(__COUNTER__))
-#define EXEC_WITH_COUNTER_EVAL(counter) counter
-
 #define EXEC_ONCE_PROGN_ID1(tag) do__begin__ ##tag## __do_end
 #define EXEC_ONCE_PROGN_ID(tag) EXEC_ONCE_PROGN_ID1(tag)
 #define EXEC_ONCE_PROGN_UNIQUE_ID1(tag,counter)  tag ## counter
 #define EXEC_ONCE_PROGN_UNIQUE_ID(tag,counter)  EXEC_ONCE_PROGN_UNIQUE_ID1(tag,counter)
-#define EXEC_ONCE_PROGN_WITH_TAG(counter)                               \
+#define EXEC_ONCE_PROGN_WITH_TAG(tag)                                   \
     static void EXEC_ONCE_PROGN_ID(tag)(void);                          \
                                        EXEC_ONCE(EXEC_ONCE_PROGN_ID(tag)) \
                                        static void EXEC_ONCE_PROGN_ID(tag)(void) 
