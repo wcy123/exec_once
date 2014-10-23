@@ -5,7 +5,9 @@ all: install test_main.out
 
 
 test_main: test_1.o test_2.o test_3.o test_main.o
-	$(CC) -o $@ $(LDFLAGS) $+ -lexec_once -L$(PREFIX) -Wl,-rpath,$(PREFIX)
+	$(CC) -o $@ $(LDFLAGS) $+ -lexec_once -L$(PREFIX)
+
+#-Wl,-rpath,$(PREFIX)
 
 test_main.o: exec_once.h
 
