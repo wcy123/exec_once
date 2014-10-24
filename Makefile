@@ -16,7 +16,7 @@ test_main.o: exec_once.h
 clean:
 	rm *.o test_main test_main.out
 test_main.out: test_main
-	./test_main > $@
+	LD_LIBRARY_PATH=$(PREFIX) ./test_main > $@
 
 libexec_once.so: exec_once.o
 	$(CC) -shared -Wl,-soname,$@  -o $@ $+
