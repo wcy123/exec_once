@@ -72,7 +72,7 @@ void exec_once_init()
         exit(1976);
     }
     if(getenv("EXEC_ONCE_DEBUG") != NULL){
-        exec_once_debug = 1;
+        exec_once_debug = atoi(getenv("EXEC_ONCE_DEBUG"));
     }
     p = g_exec_once;
     if(exec_once_debug){
