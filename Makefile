@@ -19,7 +19,7 @@ test_main.out: test_main
 	LD_LIBRARY_PATH=$(PREFIX) ./test_main > $@
 
 libexec_once.so: exec_once.o
-	$(CC) -shared -Wl,-soname,$@  -o $@ $+
+	$(CC) -shared -Wl,-soname,$@  -o $@ $+ $(LDFLAGS)
 exec_once.o: exec_once.c exec_once.h
 	$(CC) $(CFLAGS) -fPIC -c -o $@ $<
 
