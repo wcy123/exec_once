@@ -1,22 +1,28 @@
 # a very simple wrapper for `__attribute__((constructor))`
 
-Sometimes, we want to execute some C codes per transform unit, C++
-constructor function for a static variable could solve the problem,
-but
+Sometimes, we need to execute C codes per transform unit to initialize
+static variables. Compilation time initialization is so limited that
+only some constant values are valid, you cannot execute arbitrary C
+code. C++ constructor function for a static variable could solve the
+problem, but it has new problems as below
+
  - it need c++ compiler and c++ source code.
  - there is no dependency between transform units.
  - the codes are executed before `main` function.
- 
-we cannot guarantee that one transform unit executes before another
+
+In a C transform unit, into to initalized a file local variable, you
+have to export a function which to be invoked by C++ part.
+
+We cannot guarantee that one transform unit executes before another
 transform unit.
 
-we want to the initalization code is executed in a controlled way,
+We want to the initalization code is executed in a controlled way,
 e.g. after `main` function processed command line options and
 initialized some other libraries.
 
 # feasibility
 
-[constructor][__attribute__((contructor))] is a well-known gcc
+[__attribute__((contructor))][constructor] is a well-known gcc
 extension, which causes the function to be called automatically before
 execution enters `main`.
 
