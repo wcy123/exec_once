@@ -17,7 +17,7 @@ typedef struct exec_once_s {
 struct exec_once_s;
 extern struct exec_once_tu_s* g_exec_once;
 int g_exec_once_errors;
-void exec_once_register(struct exec_once_s * x);
+void exec_once_register(exec_once_t * x, exec_once_t** glist);
 
 typedef struct exec_once_tu_s exec_once_tu_t;
 struct exec_once_tu_s {
@@ -45,7 +45,7 @@ static exec_once_t * exec_once_list = (void*)0;
                 , __FILE__                                              \
                 , __LINE__                                              \
             };                                                          \
-        exec_once_register(&x);                                         \
+        exec_once_register(&x,&exec_once_list);                         \
     }                                                                   \
     static void EXEC_ONCE_MACRO_CONCAT(tag, _block)(void)               \
 
