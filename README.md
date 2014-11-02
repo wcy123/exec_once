@@ -1,3 +1,9 @@
+=======
+exec_once
+=========
+
+execute initialization block for C transform unit
+
 # a very simple wrapper for `__attribute__((constructor))`
 
 Sometimes, we need to execute C codes per transform unit to initialize
@@ -175,12 +181,67 @@ int main(int argc, char *argv[])
 {% endhighlight %}
 
 {% highlight shell-session %}
-bash$ EXEC_ONCE_DIR=~/d/working/voba2/exec_once/
-bash$ gcc -I $EXEC_DIR foo.c main.c -L  -lexec_once && LD_LIBRARY_PATH=~/d/working/voba2/exec_once/ ./a.out
+bash$ git clone /home/git.repository/exec_once.git/
+Cloning into 'exec_once'...
+done.
+bash$ cd exec_once/
+bash$ make
+bash$ cat foo.c
+// in foo.c
+#define EXEC_ONCE_TU_NAME "foo"
+#include <exec_once.h>
+EXEC_ONCE_PROGN {
+    printf("Hello World From Foo\n");
+}
+
+bash$ cat main.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <exec_once.h>
+int main(int argc, char *argv[])
+{
+    printf("start to init exec_once\n");
+    exec_once_init();
+    printf("after init exec_once\n");
+    return 0;
+}
+
+bash$ gcc -I . foo.c main.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out
 start to init exec_once
 Hello World From Foo
 after init exec_once
 {% endhighlight %}
+
+# dependency
+
+why we have to define `EXEC_ONCE_TU_NAME`? It is because of dependency.
+{% highlight shell-session %}
+bash$ cat bar.c
+// in bar.c
+#define EXEC_ONCE_TU_NAME "bar"
+#include <exec_once.h>
+EXEC_ONCE_PROGN {
+    printf("Hello World From Bar\n");
+}
+bash$ gcc -I . foo.c bar.c main.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out
+start to init exec_once
+Hello World From Foo
+Hello World From Bar
+after init exec_once
+bash$ gcc -I . bar.c foo.c main.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out
+start to init exec_once
+Hello World From Bar
+Hello World From Foo
+after init exec_once
+{% endhighlight %}
+
+We can see the execution order depends on the linker. If we put
+`bar.c` in front of `foo.c`, `exec_once` blocks in `bar.c` executes
+before blocks in `foo.c`.
+
+If every transform unit has a name, we can define the dependency
+relationship, by using macro `EXEC_ONCE_DEPENDS`, as below
+
 
 
 
