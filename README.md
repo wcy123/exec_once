@@ -2,14 +2,13 @@
 exec_once
 =========
 
-execute initialization block for C transform unit
-
-# a very simple wrapper for `__attribute__((constructor))`
+execute initialization block for C transform unit a very simple
+wrapper for `__attribute__((constructor))`
 
 Sometimes, we need to execute C codes per transform unit to initialize
 static variables. Compilation time initialization is so limited that
 only some constant values are valid, you cannot execute arbitrary C
-code. C++ constructor function for a static variable could solve the
+codes. C++ constructor function for a static variable could solve the
 problem, but it has new problems as below
 
  - it need c++ compiler and c++ source code.
@@ -26,14 +25,14 @@ We want to the initalization code is executed in a controlled way,
 e.g. after `main` function processed command line options and
 initialized some other libraries.
 
-# feasibility
+## feasibility
 
 [__attribute__((contructor))][constructor] is a well-known gcc
 extension, which causes the function to be called automatically before
 execution enters `main`.
 
 
-{% highlight c %}
+```c
 __attribute__((constructor))
 static void foo() 
 {
@@ -45,15 +44,15 @@ int main(int argc, char *argv[])
     printf("Hello World");
     return 0;
 }
-{% endhighlight %}
+```
 
 the output of the above program is
 
-{% highlight shell-session %}
+```shell-session
 gcc a.c && ./a.out
 Hello World from a constructor
 Hello World
-{% endhighlight %}
+```
 
 so we can use this feature to execute to register a small function to 
 
