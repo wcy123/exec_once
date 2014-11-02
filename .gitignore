@@ -6,3 +6,7 @@ libexec_once.so
 test_main
 a.c
 depend.inc
+a.sh
+b.sh
+busybox
+ls
