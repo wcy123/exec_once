@@ -1,3 +1,9 @@
+=======
+exec_once
+=========
+
+execute initialization block for C transform unit
+
 # a very simple wrapper for `__attribute__((constructor))`
 
 Sometimes, we want to execute some C codes per transform unit, C++
