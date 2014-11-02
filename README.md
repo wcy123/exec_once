@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
 so put it together
 
 ```shell-session
-bash$ git clone /home/git.repository/exec_once.git/
+bash$ git clone https://github.com/wcy123/exec_once.git
 Cloning into 'exec_once'...
 done.
 bash$ cd exec_once/
