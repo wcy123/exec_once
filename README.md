@@ -141,7 +141,7 @@ Hello World from a constructor 2
 initalization is done.
 ```
 
-# how to use it
+## how to use it
 
 - define a transform unit name at the begining of a source file,
   i.e. before including `exec_once.h`, e.g.
@@ -153,11 +153,14 @@ initalization is done.
 
 - include `exec_once.h`
 
+```c
+// in foo.c
+#include <exec_once.h>
+```
+
 - start to use macro `EXEC_ONCE_PROGN`, as below
 ```c
 // in foo.c
-#define EXEC_ONCE_TU_NAME "foo"
-#include <exec_once.h>
 EXEC_ONCE_PROGN {
     printf("Hello World From Foo\n");
 }
@@ -168,9 +171,6 @@ EXEC_ONCE_PROGN {
 
 ```c
 // in main.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <exec_once.h>
 int main(int argc, char *argv[])
 {
     printf("start to init exec_once\n");
@@ -179,6 +179,8 @@ int main(int argc, char *argv[])
     return 0;
 }
 ```
+
+so put it together
 
 ```shell-session
 bash$ git clone /home/git.repository/exec_once.git/
