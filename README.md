@@ -54,7 +54,8 @@ Hello World from a constructor
 Hello World
 ```
 
-so we can use this feature to execute to register a small function to 
+so we can use this feature to register a small function to be invoked
+later on.
 
 
 ```c
