@@ -4,3 +4,5 @@ test_exec_once_1.out
 a.cpp
 libexec_once.so
 test_main
+a.c
+depend.inc
