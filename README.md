@@ -276,7 +276,80 @@ after init exec_once
 ```
 we can see that `for` always execute before `bar`.
 
+## A use case
 
+For example, we write a program similiar to `busybox`, which execute
+command according to `args[0]`.
+
+```c
+// in busybox.h
+#pragma once
+struct cmd {
+    const char * name;
+    int (*cmd)(int argc, char *argv[]);
+    struct cmd * next;
+};
+extern struct cmd * list;
+```
+
+We define a list of struct `cmd`, we can search the corresponding
+command by `name`.
+
+```c
+// in busybox.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "busybox.h"
+#include "exec_once.h"
+struct cmd * list = NULL;
+int main(int argc, char *argv[])
+{
+    exec_once_init();
+    struct cmd * p = list;
+    while(p){
+        if(strcmp(p->name, argv[0]) ==0){
+            return p->cmd(argc,argv);
+        }
+    }
+    return 0;
+}
+```
+
+That's all for the host application, we need to develop our first
+plugin, `ls`.
+
+```c
+// in ls.c
+#define EXEC_ONCE_TU_NAME "ls"
+#include "exec_once.h"
+#include "busybox.h"
+
+static int ls(int argc, char *argv[])
+{
+    fprintf(stderr,__FILE__ ":%d:[%s] this is ls, haha\n", __LINE__, __FUNCTION__);
+    return 0;
+}
+EXEC_ONCE_PROGN {
+    static struct cmd x = { "ls", ls, NULL };
+    x.next = list;
+    list = &x;
+}
+```
+
+Test it!
+
+```shell-session
+gcc -ggdb -O0 -std=c99 -I. ls.c busybox.c exec_once.c -o busybox
+ln -s ./busybox ls
+PATH=.:$PATH
+ls
+ls.c:7:[ls] this is ls, haha
+```
+
+The main adventage of this structure is the dependency management, the
+host application `busybox.c` doesn't depends on any plugin,
+e.g. `ls.c`.
 
 
 [constructor]: https://gcc.gnu.org/onlinedocs/gcc-4.9.2/gcc/Function-Attributes.html#Function-Attributes "GNU GCC Manual"
