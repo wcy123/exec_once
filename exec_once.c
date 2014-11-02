@@ -7,7 +7,7 @@ static int exec_once_debug = 0;
 
 exec_once_tu_t * g_exec_once = (void*)0;
 int g_exec_once_errors = 0;
-void exec_once_register(exec_once_t * x)
+void exec_once_register(exec_once_t * x, exec_once_t** glist)
 {
     if(EXEC_ONCE_TU_NAME == 0){
         fprintf(stderr,"%s:%d: EXEC_ONCE_TU_NAME is not defined, the translation unit name.\n",
@@ -17,12 +17,11 @@ void exec_once_register(exec_once_t * x)
     if(exec_once_debug){
         fprintf(stderr,"%s:%d: register exec once block.\n",
                 x->file,x->line);
-        g_exec_once_errors ++;
     }
-    if(exec_once_list == 0){
-        exec_once_list = x;
+    if(*glist == 0){
+        *glist = x;
     }else{
-        exec_once_t * p = exec_once_list;
+        exec_once_t * p = *glist;
         while(p->next != 0) p = p->next;
         p->next = x;
     }
