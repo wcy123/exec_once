@@ -57,7 +57,7 @@ Hello World
 so we can use this feature to execute to register a small function to 
 
 
-{% highlight c %}
+```c
 #include <stdio.h>
 
 static void foo() 
@@ -95,23 +95,23 @@ int main(int argc, char *argv[])
     printf("initalization is done.\n");
     return 0;
 }
-{% endhighlight %}
+```
 
 The output of the program:
 
 
-{% highlight shell-session %}
+```shell-session
 gcc a.c && ./a.out
 start initalization.
 Hello World from a constructor
 initalization is done.
-{% endhighlight %}
+```
 
 
 In order to have a better API interface, one macro `EXEC_ONCE_PROGN`
 makes it easier as below.
 
-{% highlight c %}
+```c
 #include <stdio.h>
 #define EXEC_ONCE_TU_NAME "a"
 #include "exec_once.h"
@@ -128,44 +128,44 @@ int main(int argc, char *argv[])
     printf("initalization is done.\n");
     return 0;
 }
-{% endhighlight %}
+```
 
 the output of the program is as below
 
-{% highlight shell-session %}
+```shell-session
 gcc a.c -lexec_once -L.  && LD_LIBRARY_PATH=. ./a.out
 start initalization.
 Hello World from a constructor 1
 Hello World from a constructor 2
 initalization is done.
-{% endhighlight %}
+```
 
 # how to use it
 
 - define a transform unit name at the begining of a source file,
   i.e. before including `exec_once.h`, e.g.
 
-{% highlight c %}
+```c
 // in foo.c
 #define EXEC_ONCE_TU_NAME "foo"
-{% endhighlight %}
+```
 
 - include `exec_once.h`
 
 - start to use macro `EXEC_ONCE_PROGN`, as below
-{% highlight c %}
+```c
 // in foo.c
 #define EXEC_ONCE_TU_NAME "foo"
 #include <exec_once.h>
 EXEC_ONCE_PROGN {
     printf("Hello World From Foo\n");
 }
-{% endhighlight %}
+```
 
 - `EXEC_ONCE_PROGN` blocks are not executed until `exec_once_init` is
   invoke, so in the `main` function, we invoke it.
 
-{% highlight c %}
+```c
 // in main.c
 #include <stdio.h>
 #include <stdlib.h>
@@ -177,9 +177,9 @@ int main(int argc, char *argv[])
     printf("after init exec_once\n");
     return 0;
 }
-{% endhighlight %}
+```
 
-{% highlight shell-session %}
+```shell-session
 bash$ git clone /home/git.repository/exec_once.git/
 Cloning into 'exec_once'...
 done.
@@ -209,12 +209,12 @@ bash$ gcc -I . foo.c main.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out
 start to init exec_once
 Hello World From Foo
 after init exec_once
-{% endhighlight %}
+```
 
 # dependency
 
 why we have to define `EXEC_ONCE_TU_NAME`? It is because of dependency.
-{% highlight shell-session %}
+```shell-session
 bash$ cat bar.c
 // in bar.c
 #define EXEC_ONCE_TU_NAME "bar"
@@ -232,7 +232,7 @@ start to init exec_once
 Hello World From Bar
 Hello World From Foo
 after init exec_once
-{% endhighlight %}
+```
 
 We can see the execution order depends on the linker. If we put
 `bar.c` in front of `foo.c`, `exec_once` blocks in `bar.c` executes
