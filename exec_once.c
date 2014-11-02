@@ -4,13 +4,48 @@
 #define EXEC_ONCE_TU_NAME "exec_once"
 #include "exec_once.h"
 static int exec_once_debug = 0;
+
 exec_once_tu_t * g_exec_once = (void*)0;
 int g_exec_once_errors = 0;
+void exec_once_register(exec_once_t * x)
+{
+    if(EXEC_ONCE_TU_NAME == 0){
+        fprintf(stderr,"%s:%d: EXEC_ONCE_TU_NAME is not defined, the translation unit name.\n",
+                x->file,x->line);
+        g_exec_once_errors ++;
+    }
+    if(exec_once_debug){
+        fprintf(stderr,"%s:%d: register exec once block.\n",
+                x->file,x->line);
+        g_exec_once_errors ++;
+    }
+    if(exec_once_list == 0){
+        exec_once_list = x;
+    }else{
+        exec_once_t * p = exec_once_list;
+        while(p->next != 0) p = p->next;
+        p->next = x;
+    }
+}
 static inline void exec_once_run_tu(exec_once_tu_t* current);
 static inline void exec_once_run(exec_once_t * p)
 {
     while(p){
+        if(exec_once_debug){
+            fprintf(stderr, "%s:%d:[%s] start running:\n",
+                    p->file,
+                    p->line,
+                    p->name);
+
+        }
         p->f();
+        if(exec_once_debug){
+            fprintf(stderr, "%s:%d:[%s] end:\n",
+                    p->file,
+                    p->line,
+                    p->name);
+
+        }
         p = p->next;
     }
 }
@@ -71,9 +106,6 @@ void exec_once_init()
                 ,g_exec_once_errors);
         exit(1976);
     }
-    if(getenv("EXEC_ONCE_DEBUG") != NULL){
-        exec_once_debug = atoi(getenv("EXEC_ONCE_DEBUG"));
-    }
     p = g_exec_once;
     if(exec_once_debug){
         fprintf(stderr,__FILE__ ":%d:[%s] the scheduled list for exec_once:\n", __LINE__, __FUNCTION__);
@@ -88,5 +120,13 @@ void exec_once_init()
     while(p!=0){
         exec_once_run_tu(p);
         p = p->next;
+    }
+}
+
+__attribute__((constructor))
+static void __exec_once_init_self()
+{
+    if(getenv("EXEC_ONCE_DEBUG") != NULL){
+        exec_once_debug = atoi(getenv("EXEC_ONCE_DEBUG"));
     }
 }
