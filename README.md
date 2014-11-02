@@ -243,7 +243,38 @@ before blocks in `foo.c`.
 
 If every transform unit has a name, we can define the dependency
 relationship, by using macro `EXEC_ONCE_DEPENDS`, as below
+```c
+// ...
+#define EXEC_ONCE_TU_NAME "bar"
+#define EXEC_ONCE_DEPENDS {"foo", NULL}
+#include <exec_once.h>
+// ...
+```
 
+then we run these commands again,
+
+```shell-session
+ % cat bar.c
+// in bar.c
+#define EXEC_ONCE_TU_NAME "bar"
+#define EXEC_ONCE_DEPENDS {"foo", NULL}
+#include <exec_once.h>
+EXEC_ONCE_PROGN {
+    printf("Hello World From Bar\n");
+}
+ % gcc -I . bar.c foo.c main.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out
+start to init exec_once
+Hello World From Foo
+Hello World From Bar
+after init exec_once
+chunywan@debian ~/workspace/exec_once
+ % gcc -I . foo.c bar.c main.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out
+start to init exec_once
+Hello World From Foo
+Hello World From Bar
+after init exec_once
+```
+we can see that `for` always execute before `bar`.
 
 
 
