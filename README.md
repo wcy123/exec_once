@@ -2,8 +2,7 @@
 exec_once
 =========
 
-execute initialization block for C transform unit a very simple
-wrapper for `__attribute__((constructor))`
+Execute initialization block for C transform unit.
 
 Sometimes, we need to execute C codes per transform unit to initialize
 static variables. Compilation time initialization is so limited that
