@@ -1,6 +1,7 @@
 =======
 exec_once
 =========
+[![Build Status](https://travis-ci.org/wcy123/exec_once.svg)](https://travis-ci.org/wcy123/exec_once)
 
 Execute initialization block for C transform unit.
 
