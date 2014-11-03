@@ -346,7 +346,7 @@ ls
 ls.c:7:[ls] this is ls, haha
 ```
 
-The main adventage of this structure is the dependency management, the
+The main adventage of the structure is the dependency management, the
 host application `busybox.c` doesn't depend on any plugin,
 e.g. `ls.c`.
 
