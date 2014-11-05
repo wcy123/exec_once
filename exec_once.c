@@ -14,7 +14,7 @@ void exec_once_register(exec_once_t * x, exec_once_t** glist)
                 x->file,x->line);
         g_exec_once_errors ++;
     }
-    if(exec_once_debug){
+    if(exec_once_debug >=9){
         fprintf(stderr,"%s:%d: register exec once block.\n",
                 x->file,x->line);
     }
@@ -30,7 +30,7 @@ static inline void exec_once_run_tu(exec_once_tu_t* current);
 static inline void exec_once_run(exec_once_t * p)
 {
     while(p){
-        if(exec_once_debug){
+        if(exec_once_debug >8){
             fprintf(stderr, "%s:%d:[%s] start running:\n",
                     p->file,
                     p->line,
@@ -38,7 +38,7 @@ static inline void exec_once_run(exec_once_t * p)
 
         }
         p->f();
-        if(exec_once_debug){
+        if(exec_once_debug>8){
             fprintf(stderr, "%s:%d:[%s] end:\n",
                     p->file,
                     p->line,
