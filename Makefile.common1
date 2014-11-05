@@ -1,0 +1,17 @@
+# directories
+srcdir = $(PWD)
+INSTALL = /usr/bin/install -c
+INSTALLDATA = /usr/bin/install -c -m 644
+bindir = $(prefix)/bin
+infodir = $(prefix)/info
+libdir = $(prefix)/lib
+includedir = $(prefix)/include
+dirs = $(prefix) $(libdir) $(includedir)
+
+# c compiler flags
+CFLAGS += -std=c99
+CFLAGS += -I $(includedir)
+
+
+
+

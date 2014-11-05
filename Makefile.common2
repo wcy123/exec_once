@@ -1,0 +1,25 @@
+install: all  $(dirs) $(install_files) 
+
+### dependency ###
+.PHONY: depend
+depend: 
+	for i in $(SRCS_C); do $(CC) -MM $(CFLAGS) $$i; done > $@.inc
+-include depend.inc
+
+
+### directories  ###
+$(dirs): % : 
+	mkdir -p $@ 2>/dev/null
+
+### clean up  ###
+.PHONY: all clean
+clean:
+	rm *.o $(CLEANED_FILES)
+
+.DELETE_ON_ERROR:
+
+
+# Local Variables:
+# mode:makefile
+# coding: utf-8-unix
+# End:

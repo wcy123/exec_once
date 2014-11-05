@@ -1,0 +1,32 @@
+SRCS_C += test_1.c
+SRCS_C += test_2.c
+SRCS_C += test_3.c
+SRCS_C += test_4.c
+SRCS_C += exec_once.c
+SRCS_C += test_main.c
+OBJS += $(patsubst %.c,%.o,$(SRCS_C))
+CLEANED_FILES += test_main
+
+all: test_main libexec_once.so
+
+
+test_main: $(OBJS)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+libexec_once.so: exec_once.o
+	$(CC) -shared -Wl,-soname,$@  -o $@ $+ $(LDFLAGS)
+exec_once.o: exec_once.c exec_once.h
+	$(CC) $(CFLAGS) -fPIC -c -o $@ $<
+
+install_files += $(libdir)/libexec_once.so
+install_files += $(includedir)/exec_once.h
+$(includedir)/exec_once.h: exec_once.h
+	$(INSTALL) $< $(includedir)/
+$(libdir)/libexec_once.so: libexec_once.so
+	$(INSTALL) $< $(libdir)/
+
+
+# Local Variables:
+# mode:makefile
+# coding: utf-8-unix
+# End:
