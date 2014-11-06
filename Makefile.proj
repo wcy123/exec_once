@@ -4,7 +4,7 @@ SRCS_C += test_3.c
 SRCS_C += test_4.c
 SRCS_C += exec_once.c
 SRCS_C += test_main.c
-OBJS += $(patsubst %.c,%.o,$(SRCS_C))
+
 CLEANED_FILES += test_main
 
 all: test_main libexec_once.so

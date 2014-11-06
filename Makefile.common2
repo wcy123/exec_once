@@ -3,7 +3,13 @@ install: all  $(dirs) $(install_files)
 ### dependency ###
 .PHONY: depend
 depend: 
-	for i in $(SRCS_C); do $(CC) -MM $(CFLAGS) $$i; done > $@.inc
+	( for i in $(SRCS_C); do		\
+		$(CC) -MM $(CFLAGS) $$i;	\
+	  done;					\
+	  for i in $(SRCS_CC); do		\
+                $(CXX) -MM $(CXXFLAGS) $$i;	\
+          done					\
+	) > $@.inc 
 -include depend.inc
 
 
@@ -14,7 +20,7 @@ $(dirs): % :
 ### clean up  ###
 .PHONY: all clean
 clean:
-	rm *.o $(CLEANED_FILES)
+	-rm *.o $(CLEANED_FILES) 2>/dev/null
 
 .DELETE_ON_ERROR:
 
