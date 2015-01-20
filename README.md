@@ -32,7 +32,7 @@ extension, which causes the function to be called automatically before
 execution enters `main`.
 
 
-```c
+~~~{.c}
 __attribute__((constructor))
 static void foo() 
 {
@@ -44,21 +44,21 @@ int main(int argc, char *argv[])
     printf("Hello World");
     return 0;
 }
-```
+~~~
 
 the output of the above program is
 
-```shell-session
+~~~shell-session
 gcc a.c && ./a.out
 Hello World from a constructor
 Hello World
-```
+~~~
 
 so we can use this feature to register a small function to be invoked
 later on.
 
 
-```c
+~~~{.c}
 #include <stdio.h>
 
 static void foo() 
@@ -96,23 +96,23 @@ int main(int argc, char *argv[])
     printf("initalization is done.\n");
     return 0;
 }
-```
+~~~
 
 The output of the program:
 
 
-```shell-session
+~~~shell-session
 gcc a.c && ./a.out
 start initalization.
 Hello World from a constructor
 initalization is done.
-```
+~~~
 
 
 In order to have a better API interface, one macro `EXEC_ONCE_PROGN`
 makes it easier as below.
 
-```c
+~~~{.c}
 #include <stdio.h>
 #define EXEC_ONCE_TU_NAME "a"
 #include "exec_once.h"
@@ -129,47 +129,47 @@ int main(int argc, char *argv[])
     printf("initalization is done.\n");
     return 0;
 }
-```
+~~~
 
 the output of the program is as below
 
-```shell-session
+~~~shell-session
 gcc a.c -lexec_once -L.  && LD_LIBRARY_PATH=. ./a.out
 start initalization.
 Hello World from a constructor 1
 Hello World from a constructor 2
 initalization is done.
-```
+~~~
 
 ## how to use it
 
 - define a transform unit name at the begining of a source file,
   i.e. before including `exec_once.h`, e.g.
 
-```c
+~~~{.c}
 // in foo.c
 #define EXEC_ONCE_TU_NAME "foo"
-```
+~~~
 
 - include `exec_once.h`
 
-```c
+~~~{.c}
 // in foo.c
 #include <exec_once.h>
-```
+~~~
 
 - start to use macro `EXEC_ONCE_PROGN`, as below
-```c
+~~~{.c}
 // in foo.c
 EXEC_ONCE_PROGN {
     printf("Hello World From Foo\n");
 }
-```
+~~~
 
 - `EXEC_ONCE_PROGN` blocks are not executed until `exec_once_init` is
   invoke, so in the `main` function, we invoke it.
 
-```c
+~~~{.c}
 // in main.c
 int main(int argc, char *argv[])
 {
@@ -178,11 +178,11 @@ int main(int argc, char *argv[])
     printf("after init exec_once\n");
     return 0;
 }
-```
+~~~
 
 so put it together
 
-```shell-session
+~~~shell-session
 bash$ git clone https://github.com/wcy123/exec_once.git
 Cloning into 'exec_once'...
 done.
@@ -212,12 +212,12 @@ bash$ gcc -I . foo.c main.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out
 start to init exec_once
 Hello World From Foo
 after init exec_once
-```
+~~~
 
 # dependency
 
 why we have to define `EXEC_ONCE_TU_NAME`? It is because of dependency.
-```shell-session
+~~~shell-session
 bash$ cat bar.c
 // in bar.c
 #define EXEC_ONCE_TU_NAME "bar"
@@ -235,7 +235,7 @@ start to init exec_once
 Hello World From Bar
 Hello World From Foo
 after init exec_once
-```
+~~~
 
 We can see the execution order depends on the linker. If we put
 `bar.c` in front of `foo.c`, `exec_once` blocks in `bar.c` executes
@@ -243,17 +243,17 @@ before blocks in `foo.c`.
 
 If every transform unit has a name, we can define the dependency
 relationship, by using macro `EXEC_ONCE_DEPENDS`, as below
-```c
+~~~{.c}
 // ...
 #define EXEC_ONCE_TU_NAME "bar"
 #define EXEC_ONCE_DEPENDS {"foo", NULL}
 #include <exec_once.h>
 // ...
-```
+~~~
 
 then we run these commands again,
 
-```shell-session
+~~~shell-session
  % cat bar.c
 // in bar.c
 #define EXEC_ONCE_TU_NAME "bar"
@@ -273,7 +273,7 @@ start to init exec_once
 Hello World From Foo
 Hello World From Bar
 after init exec_once
-```
+~~~
 we can see that `for` always execute before `bar`.
 
 ## A use case
@@ -281,7 +281,7 @@ we can see that `for` always execute before `bar`.
 For example, we write a program similiar to `busybox`, which execute
 command according to `args[0]`.
 
-```c
+~~~{.c}
 // in busybox.h
 #pragma once
 struct cmd {
@@ -290,12 +290,12 @@ struct cmd {
     struct cmd * next;
 };
 extern struct cmd * list;
-```
+~~~
 
 We define a list of struct `cmd`, we can search the corresponding
 command by `name`.
 
-```c
+~~~{.c}
 // in busybox.c
 #include <stdio.h>
 #include <stdlib.h>
@@ -314,12 +314,12 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-```
+~~~
 
 That's all for the host application, we need to develop our first
 plugin, `ls`.
 
-```c
+~~~{.c}
 // in ls.c
 #define EXEC_ONCE_TU_NAME "ls"
 #include "exec_once.h"
@@ -335,17 +335,17 @@ EXEC_ONCE_PROGN {
     x.next = list;
     list = &x;
 }
-```
+~~~
 
 Test it!
 
-```shell-session
+~~~shell-session
 gcc -ggdb -O0 -std=c99 -I. ls.c busybox.c exec_once.c -o busybox
 ln -s ./busybox ls
 PATH=.:$PATH
 ls
 ls.c:7:[ls] this is ls, haha
-```
+~~~
 
 The main adventage of the structure is the dependency management, the
 host application `busybox.c` doesn't depend on any plugin,

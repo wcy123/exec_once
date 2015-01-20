@@ -11,3 +11,5 @@ b.sh
 busybox
 ls
 c.sh
+html
+doxygen_sqlite3.db
