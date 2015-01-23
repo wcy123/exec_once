@@ -25,6 +25,8 @@ $(includedir)/exec_once.h: exec_once.h
 $(libdir)/libexec_once.so: libexec_once.so
 	$(INSTALL) $< $(libdir)/
 
+test: test_main
+	./test_main
 
 # Local Variables:
 # mode:makefile
