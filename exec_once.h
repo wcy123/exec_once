@@ -5,8 +5,8 @@ exec_once
 
 */
 #include <stdio.h>
-void abort(void);
-extern int strcmp(const char *s1, const char *s2);
+#include <stdlib.h>
+#include <string.h>
 // public symbols
 void exec_once_init();
 // if EXEC_ONCE_TU_NAME is not defined, the following functions and
