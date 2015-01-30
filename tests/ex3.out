@@ -1,25 +1,9 @@
 tests/ex3_main.c:6:[main] start exec once
-exec_once.c:112:[exec_once_init] the scheduled list for exec_once:
-exec_once.c:115:[exec_once_init]      exec_once
-exec_once.c:115:[exec_once_init]      test1
-exec_once.c:115:[exec_once_init]      test2
-exec_once.c:115:[exec_once_init]      test3
-exec_once.c:115:[exec_once_init]      test_4
-exec_once.c:89:[exec_once_run_tu] checking dependency for `exec_once'
-exec_once.c:94:[exec_once_run_tu] `exec_once' start running
-exec_once.c:89:[exec_once_run_tu] checking dependency for `test1'
-exec_once.c:94:[exec_once_run_tu] `test1' start running
 test1:4:[exec_once_0_block] 
 test1:8:[exec_once_1_block] 
-exec_once.c:89:[exec_once_run_tu] checking dependency for `test2'
-exec_once.c:94:[exec_once_run_tu] `test2' start running
 test2:4:[exec_once_0_block] 
 test2:8:[exec_once_1_block] 
-exec_once.c:89:[exec_once_run_tu] checking dependency for `test3'
-exec_once.c:94:[exec_once_run_tu] `test3' start running
 test3:4:[exec_once_0_block] 
 test3:8:[exec_once_1_block] 
-exec_once.c:89:[exec_once_run_tu] checking dependency for `test_4'
-exec_once.c:94:[exec_once_run_tu] `test_4' start running
 tests/ex3_main.c:8:[main] end exec once
 hello from test 4

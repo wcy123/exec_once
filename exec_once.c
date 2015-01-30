@@ -26,7 +26,7 @@ void exec_once_register(exec_once_t * x, exec_once_t** glist)
         p->next = x;
     }
 }
-static inline void exec_once_run_tu(exec_once_tu_t* current);
+static inline void exec_once_run_tu(exec_once_tu_t* current,exec_once_tu_t * head);
 static inline void exec_once_run(exec_once_t * p)
 {
     while(p){
@@ -60,22 +60,22 @@ static inline int exec_once_depend_on(exec_once_tu_t* current, exec_once_tu_t* p
     }
     return ret;
 }
-static inline void exec_once_run_dependency(exec_once_tu_t* current)
+static inline void exec_once_run_dependency(exec_once_tu_t* current, exec_once_tu_t * head)
 {
-    exec_once_tu_t* p = g_exec_once;
+    exec_once_tu_t* p = head;
     while(p!=0){
         if(exec_once_depend_on(current,p)){
             if(exec_once_debug){
                 fprintf(stderr,__FILE__ ":%d:[%s] %s depends on %s, running %s\n", __LINE__, __FUNCTION__,
                         current->name,p->name,p->name);
             }
-            exec_once_run_tu(p);
+            exec_once_run_tu(p,head);
         }
         p = p->next;
     }
     return;
 }
-static inline void exec_once_run_tu(exec_once_tu_t* current)
+static inline void exec_once_run_tu(exec_once_tu_t* current,exec_once_tu_t * head)
 {
     if(current->done){
         if(0 && exec_once_debug){
@@ -89,7 +89,7 @@ static inline void exec_once_run_tu(exec_once_tu_t* current)
         fprintf(stderr,__FILE__ ":%d:[%s] checking dependency for `%s'\n", __LINE__, __FUNCTION__,
                 current->name);
     }
-    exec_once_run_dependency(current);
+    exec_once_run_dependency(current,head);
     if(exec_once_debug){
         fprintf(stderr,__FILE__ ":%d:[%s] `%s' start running\n", __LINE__, __FUNCTION__,
                 current->name);
@@ -100,14 +100,16 @@ static inline void exec_once_run_tu(exec_once_tu_t* current)
 static void check_consistent_of_dependency();
 void exec_once_init()
 {
-    exec_once_tu_t* p = g_exec_once;
-    check_consistent_of_dependency();
+    exec_once_tu_t * head = g_exec_once;
+    g_exec_once = NULL;
+    exec_once_tu_t* p = head;
+    check_consistent_of_dependency(head);
     if(g_exec_once_errors > 0){
         fprintf(stderr,__FILE__ ":%d:[%s] %d error(s) for exec_once, you might forgot to define translation unit name.\n", __LINE__, __FUNCTION__
                 ,g_exec_once_errors);
         exit(1976);
     }
-    p = g_exec_once;
+    p = head;
     if(exec_once_debug){
         fprintf(stderr,__FILE__ ":%d:[%s] the scheduled list for exec_once:\n", __LINE__, __FUNCTION__);
         while(p!=0){
@@ -117,27 +119,27 @@ void exec_once_init()
             p = p->next;
         }
     }
-    p = g_exec_once;
+    p = head;
     while(p!=0){
-        exec_once_run_tu(p);
+        exec_once_run_tu(p,head);
         p = p->next;
     }
 }
-static void check_one(const char * myname, const char * yourname);
-static void check_consistent_of_dependency()
+static void check_one(const char * myname, const char * yourname, exec_once_tu_t * head);
+static void check_consistent_of_dependency(exec_once_tu_t * head)
 {
-    exec_once_tu_t * p = g_exec_once;
-    for(p = g_exec_once; p ; p = p->next){
+    exec_once_tu_t * p = head;
+    for(p = head; p ; p = p->next){
         for(int i = 0; p->depend[i] != 0; ++i){
-            check_one(p->name,p->depend[i]);
+            check_one(p->name,p->depend[i],head);
         }
     }
 }
-static void check_one(const char * myname, const char * yourname)
+static void check_one(const char * myname, const char * yourname, exec_once_tu_t * head)
 {
-    exec_once_tu_t * p = g_exec_once;
+    exec_once_tu_t * p = head;
     int ret = 0;
-    for(p = g_exec_once; p ; p = p->next){
+    for(p = head; p ; p = p->next){
         if(strcmp(p->name, yourname) == 0){
             ret = 1;
             break;

@@ -49,7 +49,7 @@ tests/ex2.out: tests/ex2.a.c tests/ex2.b.c libexec_once.so
 TESTS += tests/ex3.out
 tests/ex3.out: tests/ex3_1.c tests/ex3_2.c tests/ex3_3.c tests/ex3_4.c tests/ex3_main.c
 	gcc -I. tests/ex3_1.c tests/ex3_2.c tests/ex3_3.c tests/ex3_4.c tests/ex3_main.c \
-        -L. -lexec_once && env LD_LIBRARY_PATH=.  ./a.out  >$@ 2>&1
+        -L. -lexec_once && env EXEC_ONCE_DEBUG=0 LD_LIBRARY_PATH=.  ./a.out  >$@ 2>&1
 
 
 test:  $(TESTS)
