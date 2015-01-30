@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define EXEC_ONCE_TU_NAME "exec_once"
+#define EXEC_ONCE_TU_NAME "exec_once" //?why define it?
 #include "exec_once.h"
 static int exec_once_debug = 0;
 
