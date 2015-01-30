@@ -32,114 +32,41 @@ extension, which causes the function to be called automatically before
 execution enters `main`.
 
 
-~~~{.c}
-__attribute__((constructor))
-static void foo() 
-{
-    printf("Hello World from a constructor\n");
-}
-
-int main(int argc, char *argv[])
-{
-    printf("Hello World");
-    return 0;
-}
-~~~
+<code>
+@include tests/feasibility1.c
+</code>
 
 the output of the above program is
 
-~~~shell-session
-gcc a.c && ./a.out
-Hello World from a constructor
-Hello World
-~~~
+<code>
+@include tests/feasibility1.out
+</code>
 
 so we can use this feature to register a small function to be invoked
 later on.
-
-
-~~~{.c}
-#include <stdio.h>
-
-static void foo() 
-{
-    printf("Hello World from a constructor\n");
-}
-
-
-typedef struct exec_once_s {
-    void (*f)();
-    struct exec_once_s * next;
-} exec_once_t;
-static exec_once_t * exec_once_list = NULL;
-
-__attribute__((constructor))
-static void register_foo()
-{
-    static exec_once_t x = {foo, NULL};
-    x.next = exec_once_list;
-    exec_once_list = &x;
-}
-
-void exec_once_init()
-{
-    while(exec_once_list){
-        exec_once_list->f();
-        exec_once_list = exec_once_list->next;
-    }
-}
-
-int main(int argc, char *argv[])
-{
-    printf("start initalization.\n");
-    exec_once_init();
-    printf("initalization is done.\n");
-    return 0;
-}
-~~~
+<code>
+@include tests/feasibility2.c
+</code>
 
 The output of the program:
 
-
-~~~shell-session
-gcc a.c && ./a.out
-start initalization.
-Hello World from a constructor
-initalization is done.
-~~~
+<code>
+@include tests/feasibility2.out
+</code>
 
 
 In order to have a better API interface, one macro `EXEC_ONCE_PROGN`
 makes it easier as below.
 
-~~~{.c}
-#include <stdio.h>
-#define EXEC_ONCE_TU_NAME "a"
-#include "exec_once.h"
-EXEC_ONCE_PROGN {
-    printf("Hello World from a constructor 1\n");
-}
-EXEC_ONCE_PROGN {
-    printf("Hello World from a constructor 2\n");
-}
-int main(int argc, char *argv[])
-{
-    printf("start initalization.\n");
-    exec_once_init();
-    printf("initalization is done.\n");
-    return 0;
-}
-~~~
+<code>
+@include tests/ex1.c
+</code>
 
 the output of the program is as below
 
-~~~shell-session
-gcc a.c -lexec_once -L.  && LD_LIBRARY_PATH=. ./a.out
-start initalization.
-Hello World from a constructor 1
-Hello World from a constructor 2
-initalization is done.
-~~~
+<code>
+@include tests/ex1.out
+</code>
 
 ## how to use it
 

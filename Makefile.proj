@@ -4,14 +4,15 @@ SRCS_C += test_3.c
 SRCS_C += test_4.c
 SRCS_C += exec_once.c
 SRCS_C += test_main.c
+SRCS_C += tests/feasibility.c
 
 CLEANED_FILES += test_main
 
 all: test_main libexec_once.so
 
 
-test_main: $(OBJS)
-	$(CC) -o $@ $(LDFLAGS) $^
+test_main: test_1.o test_2.o test_3.o test_4.o test_main.o
+	$(CC) -o $@ $(LDFLAGS) $^ -lexec_once -L.
 
 libexec_once.so: exec_once.o
 	$(CC) -shared -Wl,-soname,$@  -o $@ $+ $(LDFLAGS)
@@ -25,8 +26,29 @@ $(includedir)/exec_once.h: exec_once.h
 $(libdir)/libexec_once.so: libexec_once.so
 	$(INSTALL) $< $(libdir)/
 
-test: test_main
-	./test_main
+TESTS += tests/feasibility1.out
+.PHONY: tests/feasibility1.out
+tests/feasibility1.out: tests/feasibility1.c
+	gcc $< && ./a.out > $@
+
+TESTS += tests/feasibility2.out
+.PHONY: tests/feasibility2.out
+tests/feasibility2.out: tests/feasibility2.c
+	gcc $< && ./a.out > $@
+
+TESTS += tests/ex1.out
+.PHONY: tests/ex1.out
+tests/ex1.out: tests/ex1.c libexec_once.so
+	gcc -I. $< -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out  > $@
+
+TESTS += tests/ex2.out
+.PHONY: tests/ex2.out
+tests/ex2.out: tests/ex2.a.c tests/ex2.b.c libexec_once.so
+	gcc -I. tests/ex2.a.c tests/ex2.b.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out  > $@
+
+
+test: test_main  $(TESTS)
+	LD_LIBRARY_PATH=. ./test_main
 
 # Local Variables:
 # mode:makefile

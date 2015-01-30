@@ -5,7 +5,8 @@ exec_once
 
 */
 #include <stdio.h>
-#include <stdlib.h>
+void abort(void);
+extern int strcmp(const char *s1, const char *s2);
 // public symbols
 void exec_once_init();
 // if EXEC_ONCE_TU_NAME is not defined, the following functions and
@@ -71,10 +72,21 @@ static void dont_invoke_me_exec_once_register_tu()
         fprintf(stderr, "EXEC_ONCE_TU_NAME is not defined\n");
         abort();
     }
+
+
     if(g_exec_once == 0){
         g_exec_once = &x;
     }else{
-        exec_once_tu_t * p = g_exec_once;
+        exec_once_tu_t * p = NULL;
+        for(p = g_exec_once; p ; p = p->next){
+            if(strcmp(p->name, x.name) == 0){
+                fprintf(stderr,__FILE__ ":%d:[%s] TU name conflicts: TU `%s` is already defined.\n"
+                        ,__LINE__, __FUNCTION__
+                        ,x.name);
+                abort();
+            }
+        }
+        p = g_exec_once;
         while(p->next != 0) p = p->next;
         p->next = &x;
     }
