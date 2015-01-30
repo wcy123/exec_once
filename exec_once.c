@@ -7,7 +7,7 @@ static int exec_once_debug = 0;
 
 exec_once_tu_t * g_exec_once = (void*)0;
 int g_exec_once_errors = 0;
-void exec_once_register(exec_once_t * x, exec_once_t** glist)
+void exec_once_register(exec_once_block_t * x, exec_once_block_t** glist)
 {
     if(EXEC_ONCE_TU_NAME == 0){
         fprintf(stderr,"%s:%d: EXEC_ONCE_TU_NAME is not defined, the translation unit name.\n",
@@ -21,13 +21,13 @@ void exec_once_register(exec_once_t * x, exec_once_t** glist)
     if(*glist == 0){
         *glist = x;
     }else{
-        exec_once_t * p = *glist;
+        exec_once_block_t * p = *glist;
         while(p->next != 0) p = p->next;
         p->next = x;
     }
 }
 static inline void exec_once_run_tu(exec_once_tu_t* current,exec_once_tu_t * head);
-static inline void exec_once_run(exec_once_t * p)
+static inline void exec_once_run(exec_once_block_t * p)
 {
     while(p){
         if(exec_once_debug >8){
