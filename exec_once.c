@@ -97,9 +97,11 @@ static inline void exec_once_run_tu(exec_once_tu_t* current)
     exec_once_run(*current->head);
     return;
 }
+static void check_consistent_of_dependency();
 void exec_once_init()
 {
     exec_once_tu_t* p = g_exec_once;
+    check_consistent_of_dependency();
     if(g_exec_once_errors > 0){
         fprintf(stderr,__FILE__ ":%d:[%s] %d error(s) for exec_once, you might forgot to define translation unit name.\n", __LINE__, __FUNCTION__
                 ,g_exec_once_errors);
@@ -121,7 +123,35 @@ void exec_once_init()
         p = p->next;
     }
 }
-
+static void check_one(const char * myname, const char * yourname);
+static void check_consistent_of_dependency()
+{
+    exec_once_tu_t * p = g_exec_once;
+    for(p = g_exec_once; p ; p = p->next){
+        for(int i = 0; p->depend[i] != 0; ++i){
+            check_one(p->name,p->depend[i]);
+        }
+    }
+}
+static void check_one(const char * myname, const char * yourname)
+{
+    exec_once_tu_t * p = g_exec_once;
+    int ret = 0;
+    for(p = g_exec_once; p ; p = p->next){
+        if(strcmp(p->name, yourname) == 0){
+            ret = 1;
+            break;
+        }
+    }
+    if(!ret){
+        fprintf(stderr,__FILE__ ":%d:[%s] EXEC_ONCE error: `%s` requires `%s`, but there is no `%s`.\n"
+                , __LINE__, __FUNCTION__
+                , myname, yourname, yourname
+            );
+        abort();
+    }
+}
+       
 __attribute__((constructor))
 static void __exec_once_init_self()
 {

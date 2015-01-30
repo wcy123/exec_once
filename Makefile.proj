@@ -1,18 +1,16 @@
-SRCS_C += test_1.c
-SRCS_C += test_2.c
-SRCS_C += test_3.c
-SRCS_C += test_4.c
 SRCS_C += exec_once.c
-SRCS_C += test_main.c
+SRCS_C += tests/ex3_1.c
+SRCS_C += tests/ex3_2.c
+SRCS_C += tests/ex3_3.c
+SRCS_C += tests/ex3_4.c
+SRCS_C += tests/ex3_main.c
 SRCS_C += tests/feasibility.c
 
-CLEANED_FILES += test_main
-
-all: test_main libexec_once.so
 
 
-test_main: test_1.o test_2.o test_3.o test_4.o test_main.o
-	$(CC) -o $@ $(LDFLAGS) $^ -lexec_once -L.
+all: libexec_once.so
+
+
 
 libexec_once.so: exec_once.o
 	$(CC) -shared -Wl,-soname,$@  -o $@ $+ $(LDFLAGS)
@@ -43,12 +41,19 @@ tests/ex1.out: tests/ex1.c libexec_once.so
 
 TESTS += tests/ex2.out
 .PHONY: tests/ex2.out
-tests/ex2.out: tests/ex2.a.c tests/ex2.b.c libexec_once.so
-	gcc -I. tests/ex2.a.c tests/ex2.b.c -L. -lexec_once && LD_LIBRARY_PATH=. ./a.out  > $@
+## an error is expected.
+tests/ex2.out: tests/ex2.a.c tests/ex2.b.c libexec_once.so 
+	gcc -I. tests/ex2.a.c tests/ex2.b.c -L. -lexec_once && ! env LD_LIBRARY_PATH=.   ./a.out  >$@ 2>&1
+
+.PHONY: tests/ex3.out
+TESTS += tests/ex3.out
+tests/ex3.out: tests/ex3_1.c tests/ex3_2.c tests/ex3_3.c tests/ex3_4.c tests/ex3_main.c
+	gcc -I. tests/ex3_1.c tests/ex3_2.c tests/ex3_3.c tests/ex3_4.c tests/ex3_main.c \
+        -L. -lexec_once && env LD_LIBRARY_PATH=.  ./a.out  >$@ 2>&1
 
 
-test: test_main  $(TESTS)
-	LD_LIBRARY_PATH=. ./test_main
+test:  $(TESTS)
+
 
 # Local Variables:
 # mode:makefile

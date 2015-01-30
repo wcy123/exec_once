@@ -1,0 +1,2 @@
+./exec_once.h:84:[dont_invoke_me_exec_once_register_tu] TU name conflicts: TU `a` is already defined.
+Aborted
