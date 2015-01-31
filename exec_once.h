@@ -18,6 +18,11 @@ typedef struct exec_once_block_s {
 } exec_once_block_t;
 typedef struct exec_once_tu_s exec_once_tu_t;
 struct exec_once_tu_s {
+    // it is used by depend. After dependencies are resolved, depend
+    // is an array of pointer which point to exec_once_tu_t * object.
+    // flag == "", so that *depend[0] == "", then dependency is
+    // resolve.
+    char flag[sizeof(char*)];
     const char * name;
     /** the pointer to ::exec_once_list
      */
@@ -68,7 +73,7 @@ __attribute__((constructor))
 static void dont_invoke_me_exec_once_register_tu()
 {
     static const char * depend [] = EXEC_ONCE_DEPENDS;
-    static exec_once_tu_t x = { EXEC_ONCE_TU_NAME,
+    static exec_once_tu_t x = { {0x00,0x00,0x00,0x00},EXEC_ONCE_TU_NAME,
                                 &exec_once_list,
                                 0, depend, 0 };
     if(x.name == 0) {

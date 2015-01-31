@@ -1,9 +1,9 @@
 tests/ex_simple_dependency_main.c:6:[main] start exec once
-test1:4:[exec_once_0_block] 
-test1:8:[exec_once_1_block] 
-test2:4:[exec_once_0_block] 
-test2:8:[exec_once_1_block] 
 test3:4:[exec_once_0_block] 
 test3:8:[exec_once_1_block] 
+test2:4:[exec_once_0_block] 
+test2:8:[exec_once_1_block] 
+test1:4:[exec_once_0_block] 
+test1:8:[exec_once_1_block] 
 tests/ex_simple_dependency_main.c:8:[main] end exec once
 hello from test 4

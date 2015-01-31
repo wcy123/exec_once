@@ -90,17 +90,19 @@ static inline void exec_once_run_tu(exec_once_tu_t* current,exec_once_tu_t * hea
     exec_once_run(*current->head);
     return;
 }
-static void check_consistent_of_dependency();
-static void check_exec_block(exec_once_tu_t * head);
 static void check_name_confict(exec_once_tu_t * head);
+static void check_exec_block(exec_once_tu_t * head);
+static void resolve_dependency(exec_once_tu_t * head);
+static void check_dependency_exists(exec_once_tu_t * head);
 void exec_once_init()
 {
     exec_once_tu_t * head = g_exec_once;
-    check_name_confict(head);
-    check_exec_block(head);    
     g_exec_once = NULL;
     exec_once_tu_t* p = head;
-    check_consistent_of_dependency(head);
+    check_name_confict(head);
+    check_exec_block(head);
+    resolve_dependency(head);
+    check_dependency_exists(head);
     p = head;
     if(exec_once_debug){
         fprintf(stderr,__FILE__ ":%d:[%s] the scheduled list for exec_once:\n", __LINE__, __FUNCTION__);
@@ -117,33 +119,36 @@ void exec_once_init()
         p = p->next;
     }
 }
-static void check_one(const char * myname, const char * yourname, exec_once_tu_t * head);
-static void check_consistent_of_dependency(exec_once_tu_t * head)
+static void resolve_dependency(exec_once_tu_t * head)
 {
+    exec_once_tu_t * p = NULL;
+    exec_once_tu_t * q = NULL;
+    for(p = head; p ; p = p->next){
+        for(int i = 0; p->depend[i] != 0; ++i){
+            for(q = head; q ; q = q->next){
+                if(strcmp(p->depend[i], q->name) == 0){
+                    p->depend[i] = (const char*) q;
+                }
+            }
+        }
+    }
+    return;
+}
+static void check_dependency_exists(exec_once_tu_t * head)
+{
+    int ok = 1;
     exec_once_tu_t * p = head;
     for(p = head; p ; p = p->next){
         for(int i = 0; p->depend[i] != 0; ++i){
-            check_one(p->name,p->depend[i],head);
+            if(p->depend[i][0] != '\0'){
+                ok = 0;
+                fprintf(stderr,"EXEC_ONCE: cannot resolve dependency for the below TU.\n");
+                print_tu(stderr,p);
+            }
         }
     }
-}
-static void check_one(const char * myname, const char * yourname, exec_once_tu_t * head)
-{
-    exec_once_tu_t * p = head;
-    int ret = 0;
-    for(p = head; p ; p = p->next){
-        if(strcmp(p->name, yourname) == 0){
-            ret = 1;
-            break;
-        }
-    }
-    if(!ret){
-        fprintf(stderr,__FILE__ ":%d:[%s] EXEC_ONCE error: `%s` requires `%s`, but there is no `%s`.\n"
-                , __LINE__, __FUNCTION__
-                , myname, yourname, yourname
-            );
-        abort();
-    }
+    if(!ok) abort();
+    return;
 }
 static void check_name_confict(exec_once_tu_t * head)
 {
@@ -177,15 +182,22 @@ static void check_exec_block(exec_once_tu_t * head)
     if(!ok) abort();
     return;
 }
-static void print_tu(FILE * fp, exec_once_tu_t * tu)
+static void print_tu(FILE * fp, exec_once_tu_t * p)
 {
     int c = 0;
-    exec_once_block_t * blk = *tu->head;
+    exec_once_block_t * blk = *p->head;
     while(blk) {blk=blk->next; c++;};
     fprintf(fp,
             "TU `%s`: %d blocks registered\n"
-            ,tu->name,c);
-    for(blk = *tu->head;
+            ,p->name,c);
+    fprintf(fp,
+            "  depend on:");
+    for(int i = 0; p->depend[i] != 0; ++i){
+        const char * name = p->depend[i][0] == '\0'? ((exec_once_tu_t*)p->depend[i])->name : p->depend[i];
+        fprintf(fp," `%s`", name);
+    }
+    fprintf(fp,"\n");
+    for(blk = *p->head;
         blk; blk=blk->next){
         fprintf(fp,
                 "    %s:%d: %s\n"
