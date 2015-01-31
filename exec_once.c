@@ -1,19 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define EXEC_ONCE_TU_NAME "exec_once" //?why define it?
 #include "exec_once.h"
 static int exec_once_debug = 0;
 static void print_tu(FILE * fp, exec_once_tu_t * tu);
 exec_once_tu_t * g_exec_once = (void*)0;
-int g_exec_once_errors = 0;
 void exec_once_register(exec_once_block_t * x, exec_once_block_t** glist)
 {
-    if(EXEC_ONCE_TU_NAME == 0){
-        fprintf(stderr,"%s:%d: EXEC_ONCE_TU_NAME is not defined, the translation unit name.\n",
-                x->file,x->line);
-        g_exec_once_errors ++;
-    }
     if(exec_once_debug >=9){
         fprintf(stderr,"%s:%d: register exec once block.\n",
                 x->file,x->line);
@@ -108,11 +101,6 @@ void exec_once_init()
     g_exec_once = NULL;
     exec_once_tu_t* p = head;
     check_consistent_of_dependency(head);
-    if(g_exec_once_errors > 0){
-        fprintf(stderr,__FILE__ ":%d:[%s] %d error(s) for exec_once, you might forgot to define translation unit name.\n", __LINE__, __FUNCTION__
-                ,g_exec_once_errors);
-        abort();
-    }
     p = head;
     if(exec_once_debug){
         fprintf(stderr,__FILE__ ":%d:[%s] the scheduled list for exec_once:\n", __LINE__, __FUNCTION__);

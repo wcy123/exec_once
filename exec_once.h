@@ -9,9 +9,6 @@ exec_once
 #include <string.h>
 // public symbols
 void exec_once_init();
-// if EXEC_ONCE_TU_NAME is not defined, the following functions and
-// macros are not available.
-#ifdef EXEC_ONCE_TU_NAME
 typedef struct exec_once_block_s {
     void (*f)();
     struct exec_once_block_s * next;
@@ -19,12 +16,6 @@ typedef struct exec_once_block_s {
     const char * file;
     int line;
 } exec_once_block_t;
-// private functions
-struct exec_once_block_s;
-extern struct exec_once_tu_s* g_exec_once;
-int g_exec_once_errorsr;
-void exec_once_register(exec_once_block_t * x, exec_once_block_t** glist);
-
 typedef struct exec_once_tu_s exec_once_tu_t;
 struct exec_once_tu_s {
     const char * name;
@@ -35,6 +26,14 @@ struct exec_once_tu_s {
     const char ** depend;
     int done;
 };
+// if EXEC_ONCE_TU_NAME is not defined, the following functions and
+// macros are not available.
+#ifdef EXEC_ONCE_TU_NAME
+// private functions
+struct exec_once_block_s;
+extern struct exec_once_tu_s* g_exec_once;
+int g_exec_once_errorsr;
+void exec_once_register(exec_once_block_t * x, exec_once_block_t** glist);
 /** every tranform unit has a list of init code blocks, exec_once_list
  * is the head of the list */
 static exec_once_block_t * exec_once_list = (void*)0;
