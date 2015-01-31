@@ -123,8 +123,15 @@ static void resolve_dependency(exec_once_tu_t * head)
 {
     exec_once_tu_t * p = NULL;
     exec_once_tu_t * q = NULL;
+    int ok = 1;
     for(p = head; p ; p = p->next){
         for(int i = 0; p->depend[i] != 0; ++i){
+            if(p->depend[i][0] == '\0'){
+                fprintf(stderr, "EXEC_ONCE: depends on a invalid TU name. TU as below\n");
+                print_tu(stderr,p);
+                ok = 0;
+                continue;
+            }
             for(q = head; q ; q = q->next){
                 if(strcmp(p->depend[i], q->name) == 0){
                     p->depend[i] = (const char*) q;
@@ -132,6 +139,7 @@ static void resolve_dependency(exec_once_tu_t * head)
             }
         }
     }
+    if(!ok) abort();
     return;
 }
 static void check_dependency_exists(exec_once_tu_t * head)
