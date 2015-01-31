@@ -108,15 +108,13 @@ static void print_tu(FILE * fp, exec_once_tu_t * p)
     exec_once_block_t * blk = *p->head;
     while(blk) {blk=blk->next; c++;};
     fprintf(fp,
-            "TU `%s`: %d blocks registered\n"
-            ,p->name,c);
-    fprintf(fp,
-            "  depend on:");
+            "TU `%s` depends on:" ,p->name);
     for(int i = 0; p->depend[i] != 0; ++i){
         const char * name = p->depend[i][0] == '\0'? ((exec_once_tu_t*)p->depend[i])->name : p->depend[i];
         fprintf(fp," `%s`", name);
     }
     fprintf(fp,"\n");
+    fprintf(fp,"   %d blocks registered\n",c);
     for(blk = *p->head;
         blk; blk=blk->next){
         fprintf(fp,
