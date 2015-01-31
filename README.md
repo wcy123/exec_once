@@ -3,6 +3,8 @@ exec_once
 =========
 [![Build Status](https://travis-ci.org/wcy123/exec_once.svg)](https://travis-ci.org/wcy123/exec_once)
 
+<http://wcy123.github.io/exec_once/> doxygen document
+
 Execute initialization block for C transform unit.
 
 Sometimes, we need to execute C codes per transform unit to initialize
@@ -59,13 +61,13 @@ In order to have a better API interface, one macro `EXEC_ONCE_PROGN`
 makes it easier as below.
 
 <code>
-@include tests/ex1.c
+@include tests/ex_basic.c
 </code>
 
 the output of the program is as below
 
 <code>
-@include tests/ex1.out
+@include tests/ex_basic.out
 </code>
 
 ## how to use it
