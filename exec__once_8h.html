@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -80,7 +80,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">exec_once.h File Reference</div>  </div>
@@ -88,21 +90,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for exec_once.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="exec__once_8h__incl.png" border="0" usemap="#exec__once_8h" alt=""/></div>
-<map name="exec__once_8h" id="exec__once_8h">
-</map>
 </div>
 </div>
 <p><a href="exec__once_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexec__once__block__s.html">exec_once_block_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structexec__once__tu__s.html">exec_once_tu_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a08539ec731d48a3bdff02bea026b884c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a08539ec731d48a3bdff02bea026b884c"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>EXEC_ONCE_PROGN</b>&#160;&#160;&#160;error you forgot to define EXEC_ONCE_TU_NAME</td></tr>
 <tr class="separator:a08539ec731d48a3bdff02bea026b884c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a72662851d74b18791d21f6fab5cb5b99"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a72662851d74b18791d21f6fab5cb5b99"></a>
+typedef struct <a class="el" href="structexec__once__block__s.html">exec_once_block_s</a>&#160;</td><td class="memItemRight" valign="bottom"><b>exec_once_block_t</b></td></tr>
+<tr class="separator:a72662851d74b18791d21f6fab5cb5b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a711d7fc2693adaccf0f29f7de77baaa1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a711d7fc2693adaccf0f29f7de77baaa1"></a>
+typedef struct <a class="el" href="structexec__once__tu__s.html">exec_once_tu_s</a>&#160;</td><td class="memItemRight" valign="bottom"><b>exec_once_tu_t</b></td></tr>
+<tr class="separator:a711d7fc2693adaccf0f29f7de77baaa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -115,7 +132,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>exec_once_init</b> ()
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 20 2015 20:35:38 for exec_once by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Feb 1 2015 02:20:00 for exec_once by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

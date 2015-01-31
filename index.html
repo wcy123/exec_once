@@ -64,7 +64,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -92,7 +92,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>We want to the initalization code is executed in a controlled way, e.g. after <code>main</code> function processed command line options and initialized some other libraries.</p>
 <h2>feasibility</h2>
 <p><a href="https://gcc.gnu.org/onlinedocs/gcc-4.9.2/gcc/Function-Attributes.html#Function-Attributes" title="GNU GCC Manual">__attribute__((contructor))</a> is a well-known gcc extension, which causes the function to be called automatically before execution enters <code>main</code>.</p>
-<div class="fragment"><div class="line">__attribute__((constructor))</div>
+<p><code> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line">__attribute__((constructor))</div>
 <div class="line">static <span class="keywordtype">void</span> foo() </div>
 <div class="line">{</div>
 <div class="line">    printf(<span class="stringliteral">&quot;Hello World from a constructor\n&quot;</span>);</div>
@@ -103,12 +104,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">    printf(<span class="stringliteral">&quot;Hello World&quot;</span>);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>the output of the above program is</p>
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;gcc a.c &amp;&amp; ./a.out</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;Hello World from a constructor</div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;Hello World</div>
-</div><!-- fragment --><p>so we can use this feature to register a small function to be invoked later on.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+</div><!-- fragment --><p> </code></p>
+<p>the output of the above program is</p>
+<p><code> </p><div class="fragment"><div class="line">Hello World from a constructor</div>
+<div class="line">Hello World</div>
+</div><!-- fragment --><p> </code></p>
+<p>so we can use this feature to register a small function to be invoked later on. <code> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"></div>
 <div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> foo() </div>
 <div class="line">{</div>
@@ -145,13 +146,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">    printf(<span class="stringliteral">&quot;initalization is done.\n&quot;</span>);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>The output of the program:</p>
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;gcc a.c &amp;&amp; ./a.out</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;start initalization.</div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;Hello World from a constructor</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;initalization is done.</div>
-</div><!-- fragment --><p>In order to have a better API interface, one macro <code>EXEC_ONCE_PROGN</code> makes it easier as below.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+</div><!-- fragment --><p> </code></p>
+<p>The output of the program:</p>
+<p><code> </p><div class="fragment"><div class="line">start initalization.</div>
+<div class="line">Hello World from a constructor</div>
+<div class="line">initalization is done.</div>
+</div><!-- fragment --><p> </code></p>
+<p>In order to have a better API interface, one macro <code>EXEC_ONCE_PROGN</code> makes it easier as below.</p>
+<p><code> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#define EXEC_ONCE_TU_NAME &quot;a&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="exec__once_8h.html">exec_once.h</a>&quot;</span></div>
 <div class="line">EXEC_ONCE_PROGN {</div>
@@ -167,13 +169,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">    printf(<span class="stringliteral">&quot;initalization is done.\n&quot;</span>);</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>the output of the program is as below</p>
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;gcc a.c -lexec_once -L.  &amp;&amp; LD_LIBRARY_PATH=. ./a.out</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;start initalization.</div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;Hello World from a constructor 1</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;Hello World from a constructor 2</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;initalization is done.</div>
-</div><!-- fragment --><h2>how to use it</h2>
+</div><!-- fragment --><p> </code></p>
+<p>the output of the program is as below</p>
+<p><code> </p><div class="fragment"><div class="line">start initalization.</div>
+<div class="line">Hello World from a constructor 1</div>
+<div class="line">Hello World from a constructor 2</div>
+<div class="line">initalization is done.</div>
+</div><!-- fragment --><p> </code></p>
+<h2>how to use it</h2>
 <ul>
 <li>define a transform unit name at the begining of a source file, i.e. before including <code><a class="el" href="exec__once_8h.html">exec_once.h</a></code>, e.g.</li>
 </ul>
@@ -230,7 +233,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;start to init exec_once</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;Hello World From Foo</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;after init exec_once</div>
-</div><!-- fragment --><h1>dependency</h1>
+</div><!-- fragment --><h2>dependency</h2>
 <p>why we have to define <code>EXEC_ONCE_TU_NAME</code>? It is because of dependency. </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;bash$ cat bar.c</div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;// in bar.c</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;#define EXEC_ONCE_TU_NAME &quot;bar&quot;</div>
@@ -274,17 +277,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;Hello World From Foo</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;Hello World From Bar</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;after init exec_once</div>
-</div><!-- fragment --><p> we can see that <code>for</code> always execute before <code>bar</code>.</p>
+</div><!-- fragment --><p> we can see that <code>foo</code> always execute before <code>bar</code>.</p>
+<h3>important note</h3>
+<ul>
+<li><code>EXEC_ONCE_TU_NAME</code> must be unique, otherwise it is a fatal error.</li>
+<li><code>EXEC_ONCE_DEPENDS</code> must refer to an existing transform unit, otherwise, it is a fatal error.</li>
+<li>If <code>EXEC_ONCE_TU_NAME</code> is defined, the transform unit must have at least one <code>EXEC_ONCE_PROGN</code> block</li>
+<li>If cycle dependency is detected, it is a fatal error.</li>
+</ul>
 <h2>A use case</h2>
 <p>For example, we write a program similiar to <code>busybox</code>, which execute command according to <code>args[0]</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// in busybox.h</span></div>
 <div class="line"><span class="preprocessor">#pragma once</span></div>
-<div class="line"><span class="keyword">struct </span><a class="code" href="structcmd.html">cmd</a> {</div>
+<div class="line"><span class="keyword">struct </span>cmd {</div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span> * name;</div>
-<div class="line">    int (*<a class="code" href="structcmd.html">cmd</a>)(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[]);</div>
-<div class="line">    <span class="keyword">struct </span><a class="code" href="structcmd.html">cmd</a> * next;</div>
+<div class="line">    int (*cmd)(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[]);</div>
+<div class="line">    <span class="keyword">struct </span>cmd * next;</div>
 <div class="line">};</div>
-<div class="line"><span class="keyword">extern</span> <span class="keyword">struct </span><a class="code" href="structcmd.html">cmd</a> * list;</div>
+<div class="line"><span class="keyword">extern</span> <span class="keyword">struct </span>cmd * list;</div>
 </div><!-- fragment --><p>We define a list of struct <code>cmd</code>, we can search the corresponding command by <code>name</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// in busybox.c</span></div>
 <div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
@@ -292,11 +302,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="preprocessor">#include &lt;string.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;busybox.h&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="exec__once_8h.html">exec_once.h</a>&quot;</span></div>
-<div class="line"><span class="keyword">struct </span><a class="code" href="structcmd.html">cmd</a> * list = NULL;</div>
+<div class="line"><span class="keyword">struct </span>cmd * list = NULL;</div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
 <div class="line">{</div>
 <div class="line">    exec_once_init();</div>
-<div class="line">    <span class="keyword">struct </span><a class="code" href="structcmd.html">cmd</a> * p = list;</div>
+<div class="line">    <span class="keyword">struct </span>cmd * p = list;</div>
 <div class="line">    <span class="keywordflow">while</span>(p){</div>
 <div class="line">        <span class="keywordflow">if</span>(strcmp(p-&gt;name, argv[0]) ==0){</div>
 <div class="line">            <span class="keywordflow">return</span> p-&gt;cmd(argc,argv);</div>
@@ -316,7 +326,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="line">EXEC_ONCE_PROGN {</div>
-<div class="line">    <span class="keyword">static</span> <span class="keyword">struct </span><a class="code" href="structcmd.html">cmd</a> x = { <span class="stringliteral">&quot;ls&quot;</span>, ls, NULL };</div>
+<div class="line">    <span class="keyword">static</span> <span class="keyword">struct </span>cmd x = { <span class="stringliteral">&quot;ls&quot;</span>, ls, NULL };</div>
 <div class="line">    x.next = list;</div>
 <div class="line">    list = &amp;x;</div>
 <div class="line">}</div>
@@ -330,7 +340,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 20 2015 20:35:38 for exec_once by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Feb 1 2015 02:20:00 for exec_once by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>
