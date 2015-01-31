@@ -1,0 +1,9 @@
+EXEC_ONCE: name conflict detected.
+TU `a`: 2 blocks registered
+    tests/ex_non_exists_tu.b.c:5: exec_once_0
+    tests/ex_non_exists_tu.b.c:8: exec_once_1
+TU `a`: 2 blocks registered
+    tests/ex_non_exists_tu.a.c:5: exec_once_0
+    tests/ex_non_exists_tu.a.c:8: exec_once_1
+start initalization.
+Aborted

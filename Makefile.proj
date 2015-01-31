@@ -39,11 +39,11 @@ TESTS += tests/ex1.out
 tests/ex1.out: tests/ex1.c libexec_once.so
 	gcc -I. $< -L. -lexec_once && env LD_LIBRARY_PATH=. ./a.out  > $@
 
-TESTS += tests/ex2.out
-.PHONY: tests/ex2.out
+TESTS += tests/ex_non_exists_tu.out
+.PHONY: tests/ex_non_exists_tu.out
 ## an error is expected, depends on non-existing tu
-tests/ex2.out: tests/ex2.a.c tests/ex2.b.c libexec_once.so 
-	gcc -I. tests/ex2.a.c tests/ex2.b.c -L. -lexec_once && ! env LD_LIBRARY_PATH=.   ./a.out  >$@ 2>&1
+tests/ex_non_exists_tu.out: tests/ex_non_exists_tu.a.c tests/ex_non_exists_tu.b.c libexec_once.so 
+	gcc -I. tests/ex_non_exists_tu.a.c tests/ex_non_exists_tu.b.c -L. -lexec_once && ! env LD_LIBRARY_PATH=.   ./a.out  >$@ 2>&1
 
 TESTS += tests/ex_no_blk.c
 .PHONY: tests/ex_no_blk.c
