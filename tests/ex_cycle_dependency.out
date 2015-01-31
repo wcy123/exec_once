@@ -1,0 +1,25 @@
+tests/ex_cycle_dependency_main.c:6:[main] start exec once
+EXEC_ONCE: cycle dependency detected for the following TU.
+TU `tu0`: 2 blocks registered
+  depend on: `tu2` `tu3`
+    tests/ex_simple_dependency_common.inc:2: exec_once_0
+    tests/ex_simple_dependency_common.inc:6: exec_once_1
+TU `tu1`: 2 blocks registered
+  depend on: `tu0`
+    tests/ex_simple_dependency_common.inc:2: exec_once_0
+    tests/ex_simple_dependency_common.inc:6: exec_once_1
+TU `tu2`: 2 blocks registered
+  depend on: `tu1`
+    tests/ex_simple_dependency_common.inc:2: exec_once_0
+    tests/ex_simple_dependency_common.inc:6: exec_once_1
+tu4:4:[exec_once_0_block] 
+tu4:8:[exec_once_1_block] 
+tu3:4:[exec_once_0_block] 
+tu3:8:[exec_once_1_block] 
+tu2:4:[exec_once_0_block] 
+tu2:8:[exec_once_1_block] 
+tu1:4:[exec_once_0_block] 
+tu1:8:[exec_once_1_block] 
+tu0:4:[exec_once_0_block] 
+tu0:8:[exec_once_1_block] 
+tests/ex_cycle_dependency_main.c:8:[main] end exec once

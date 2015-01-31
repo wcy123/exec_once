@@ -64,6 +64,13 @@ tests/ex_simple_dependency.out: tests/ex_simple_dependency_1.c tests/ex_simple_d
         -L. -lexec_once && env EXEC_ONCE_DEBUG=0 LD_LIBRARY_PATH=.  ./a.out  >$@ 2>&1
 
 
+.PHONY: tests/ex_cycle_dependency.out
+TESTS += tests/ex_cycle_dependency.out
+tests/ex_cycle_dependency.out: tests/ex_cycle_dependency.0.c tests/ex_cycle_dependency.1.c tests/ex_cycle_dependency.2.c tests/ex_cycle_dependency.3.c tests/ex_cycle_dependency.4.c tests/ex_cycle_dependency_main.c
+	gcc -I. tests/ex_cycle_dependency.0.c tests/ex_cycle_dependency.1.c tests/ex_cycle_dependency.2.c tests/ex_cycle_dependency.3.c tests/ex_cycle_dependency.4.c tests/ex_cycle_dependency_main.c \
+        -L. -lexec_once && env EXEC_ONCE_DEBUG=0 LD_LIBRARY_PATH=.  ./a.out  >$@ 2>&1
+
+
 test:  $(TESTS)
 
 

@@ -30,6 +30,11 @@ struct exec_once_tu_s {
     exec_once_tu_t * next;
     const char ** depend;
     int done;
+    // for Tarjan algorithm
+    int index;
+    int lowlink;
+    exec_once_tu_t * stack_next;
+    int in_stack;
 };
 // if EXEC_ONCE_TU_NAME is not defined, the following functions and
 // macros are not available.

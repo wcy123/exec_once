@@ -94,6 +94,7 @@ static void check_name_confict(exec_once_tu_t * head);
 static void check_exec_block(exec_once_tu_t * head);
 static void resolve_dependency(exec_once_tu_t * head);
 static void check_dependency_exists(exec_once_tu_t * head);
+static void check_cycly_dependency(exec_once_tu_t * head);
 void exec_once_init()
 {
     exec_once_tu_t * head = g_exec_once;
@@ -103,6 +104,7 @@ void exec_once_init()
     check_exec_block(head);
     resolve_dependency(head);
     check_dependency_exists(head);
+    check_cycly_dependency(head);
     p = head;
     if(exec_once_debug){
         fprintf(stderr,__FILE__ ":%d:[%s] the scheduled list for exec_once:\n", __LINE__, __FUNCTION__);
@@ -208,7 +210,104 @@ static void print_tu(FILE * fp, exec_once_tu_t * p)
                 ,blk->file,blk->line,blk->name);
     }
     return;
-}       
+}
+
+static void strongconnect(int * index, exec_once_tu_t **S, exec_once_tu_t * v, int * ok);
+static void check_cycly_dependency(exec_once_tu_t * head)
+{
+    //  Tarjan's strongly connected components algorithm
+    //  http://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
+    exec_once_tu_t * p = NULL;
+    // initialization
+    for(p = head; p ; p = p->next){
+        p->index = -1;
+        p->lowlink = -1;
+        p->stack_next = NULL;
+        p->in_stack = 0;
+    }
+    int ok = 1;
+    // index := 0
+    int index = 0;
+    //  S := empty
+    exec_once_tu_t * S = NULL;
+    /* 
+       for each v in V do
+         if (v.index is undefined) then
+            strongconnect(v)
+         end if
+      end for
+    */
+    for(p = head; p ; p = p->next){
+        if(p->index == -1){
+            strongconnect(&index,&S,p,&ok);
+        }
+    }
+}
+static void strongconnect(int * index, exec_once_tu_t **S, exec_once_tu_t * v, int * ok)
+{
+    // Set the depth index for v to the smallest unused index
+    v->index = *index;
+    v->lowlink = *index;
+    *index = *index + 1;
+    // S.push(v)
+    v->stack_next = *S;
+    v->in_stack = 1;
+    *S = v;
+/*  // Consider successors of v
+    for each (v, w) in E do
+      if (w.index is undefined) then
+        // Successor w has not yet been visited; recurse on it
+        strongconnect(w)
+        v.lowlink  := min(v.lowlink, w.lowlink)
+      else if (w is in S) then
+        // Successor w is in stack S and hence in the current SCC
+        v.lowlink  := min(v.lowlink, w.index)
+      end if
+    end for
+*/
+    for(int i = 0; v->depend[i] != 0; ++i){
+        exec_once_tu_t* w = (exec_once_tu_t*)v->depend[i];
+        if(w->index == -1){
+            strongconnect(index, S, w, ok);
+            v->lowlink = v->lowlink < w->lowlink? v->lowlink: w->lowlink;
+        }else if( w->in_stack ){
+            v->lowlink = v->lowlink < w->index? v->lowlink: w->index;
+        }
+    }
+/*
+    // If v is a root node, pop the stack and generate an SCC
+    if (v.lowlink = v.index) then
+      start a new strongly connected component
+      repeat
+        w := S.pop()
+        add w to current strongly connected component
+      until (w = v)
+      output the current strongly connected component
+    end if
+*/
+    if(v->lowlink == v->index){
+        if(*S == v){
+            // OK, single element CSS
+        }else{
+            ok = 0;
+            fprintf(stderr,"EXEC_ONCE: cycle dependency detected for the following TU.\n");
+            exec_once_tu_t * q = *S;
+            do{
+                print_tu(stderr, q);
+                q = q->stack_next;
+            }while(q != v);
+             print_tu(stderr, q);
+        }
+        exec_once_tu_t* w = NULL;
+        do{
+            // w:= S.pop()
+            w = *S;
+            w->in_stack = 0;
+            *S = w->stack_next;
+        }while(w!=v);
+    }
+    return;
+}
 __attribute__((constructor))
 static void __exec_once_init_self()
 {
