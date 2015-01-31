@@ -22,7 +22,7 @@ typedef struct exec_once_block_s {
 // private functions
 struct exec_once_block_s;
 extern struct exec_once_tu_s* g_exec_once;
-int g_exec_once_errors;
+int g_exec_once_errorsr;
 void exec_once_register(exec_once_block_t * x, exec_once_block_t** glist);
 
 typedef struct exec_once_tu_s exec_once_tu_t;
@@ -76,24 +76,8 @@ static void dont_invoke_me_exec_once_register_tu()
         fprintf(stderr, "EXEC_ONCE_TU_NAME is not defined\n");
         abort();
     }
-
-
-    if(g_exec_once == 0){
-        g_exec_once = &x;
-    }else{
-        exec_once_tu_t * p = NULL;
-        for(p = g_exec_once; p ; p = p->next){
-            if(strcmp(p->name, x.name) == 0){
-                fprintf(stderr,__FILE__ ":%d:[%s] TU name conflicts: TU `%s` is already defined.\n"
-                        ,__LINE__, __FUNCTION__
-                        ,x.name);
-                abort();
-            }
-        }
-        p = g_exec_once;
-        while(p->next != 0) p = p->next;
-        p->next = &x;
-    }
+    x.next  = g_exec_once;
+    g_exec_once = &x;
 }
 #else  // EXEC_ONCE_TU_NAME is not defined
 #define EXEC_ONCE_PROGN error you forgot to define EXEC_ONCE_TU_NAME

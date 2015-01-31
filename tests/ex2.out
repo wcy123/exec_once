@@ -1,2 +1,9 @@
-./exec_once.h:88:[dont_invoke_me_exec_once_register_tu] TU name conflicts: TU `a` is already defined.
+EXEC_ONCE: name conflict detected.
+TU `a`: 2 blocks registered
+    tests/ex2.b.c:5: exec_once_0
+    tests/ex2.b.c:8: exec_once_1
+TU `a`: 2 blocks registered
+    tests/ex2.a.c:5: exec_once_0
+    tests/ex2.a.c:8: exec_once_1
+start initalization.
 Aborted

@@ -4,7 +4,7 @@
 #define EXEC_ONCE_TU_NAME "exec_once" //?why define it?
 #include "exec_once.h"
 static int exec_once_debug = 0;
-
+static void print_tu(FILE * fp, exec_once_tu_t * tu);
 exec_once_tu_t * g_exec_once = (void*)0;
 int g_exec_once_errors = 0;
 void exec_once_register(exec_once_block_t * x, exec_once_block_t** glist)
@@ -98,16 +98,20 @@ static inline void exec_once_run_tu(exec_once_tu_t* current,exec_once_tu_t * hea
     return;
 }
 static void check_consistent_of_dependency();
+static void check_exec_block(exec_once_tu_t * head);
+static void check_name_confict(exec_once_tu_t * head);
 void exec_once_init()
 {
     exec_once_tu_t * head = g_exec_once;
+    check_name_confict(head);
+    check_exec_block(head);    
     g_exec_once = NULL;
     exec_once_tu_t* p = head;
     check_consistent_of_dependency(head);
     if(g_exec_once_errors > 0){
         fprintf(stderr,__FILE__ ":%d:[%s] %d error(s) for exec_once, you might forgot to define translation unit name.\n", __LINE__, __FUNCTION__
                 ,g_exec_once_errors);
-        exit(1976);
+        abort();
     }
     p = head;
     if(exec_once_debug){
@@ -153,7 +157,54 @@ static void check_one(const char * myname, const char * yourname, exec_once_tu_t
         abort();
     }
 }
-       
+static void check_name_confict(exec_once_tu_t * head)
+{
+    exec_once_tu_t * p = NULL;
+    exec_once_tu_t * q = NULL;
+    int ok = 1;
+    for(p = head; p ; p = p->next){
+        for(q = p->next; q ; q = q->next){
+            if(strcmp(p->name, q->name) == 0){
+                fprintf(stderr,"EXEC_ONCE: name conflict detected.\n");
+                print_tu(stderr,p);
+                print_tu(stderr,q);
+                ok = 0;
+            }
+        }
+    }
+    if(!ok) abort();
+    return;
+}
+static void check_exec_block(exec_once_tu_t * head)
+{
+    exec_once_tu_t * p = NULL;
+    int ok = 1;
+    for(p = head; p ; p = p->next){
+        if(!*p->head){
+            fprintf(stderr,"EXEC_ONCE: no EXEC_ONCE_PROGN defined in the transform unit.\n");
+            print_tu(stderr,p);
+            ok = 0;
+        }
+    }
+    if(!ok) abort();
+    return;
+}
+static void print_tu(FILE * fp, exec_once_tu_t * tu)
+{
+    int c = 0;
+    exec_once_block_t * blk = *tu->head;
+    while(blk) {blk=blk->next; c++;};
+    fprintf(fp,
+            "TU `%s`: %d blocks registered\n"
+            ,tu->name,c);
+    for(blk = *tu->head;
+        blk; blk=blk->next){
+        fprintf(fp,
+                "    %s:%d: %s\n"
+                ,blk->file,blk->line,blk->name);
+    }
+    return;
+}       
 __attribute__((constructor))
 static void __exec_once_init_self()
 {

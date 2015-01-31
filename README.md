@@ -141,7 +141,7 @@ Hello World From Foo
 after init exec_once
 ~~~
 
-# dependency
+## dependency
 
 why we have to define `EXEC_ONCE_TU_NAME`? It is because of dependency.
 ~~~shell-session
@@ -201,7 +201,16 @@ Hello World From Foo
 Hello World From Bar
 after init exec_once
 ~~~
-we can see that `for` always execute before `bar`.
+we can see that `foo` always execute before `bar`.
+
+### important note
+
+- `EXEC_ONCE_TU_NAME` must be unique, otherwise it is a fatal error.
+- `EXEC_ONCE_DEPENDS` must refer to an existing transform unit,
+  otherwise, it is a fatal error.
+- If `EXEC_ONCE_TU_NAME` is defined, the transform unit must have at
+  least one `EXEC_ONCE_PROGN` block
+- If cycle dependency is detected, it is a fatal error.
 
 ## A use case
 

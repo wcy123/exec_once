@@ -1,0 +1,6 @@
+EXEC_ONCE: no EXEC_ONCE_PROGN defined in the transform unit.
+TU `a`: 0 blocks registered
+EXEC_ONCE: no EXEC_ONCE_PROGN defined in the transform unit.
+TU `exec_once`: 0 blocks registered
+start initalization.
+Aborted
