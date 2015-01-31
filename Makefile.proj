@@ -34,9 +34,9 @@ TESTS += tests/feasibility2.out
 tests/feasibility2.out: tests/feasibility2.c
 	gcc $< && ./a.out > $@
 
-TESTS += tests/ex1.out
-.PHONY: tests/ex1.out
-tests/ex1.out: tests/ex1.c libexec_once.so
+TESTS += tests/ex_basic.out
+.PHONY: tests/ex_basic.out
+tests/ex_basic.out: tests/ex_basic.c libexec_once.so
 	gcc -I. $< -L. -lexec_once && env LD_LIBRARY_PATH=. ./a.out  > $@
 
 TESTS += tests/ex_non_exists_tu.out
