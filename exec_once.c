@@ -289,8 +289,18 @@ void exec_once_register(exec_once_block_t * x, exec_once_block_t** glist)
         *glist = x;
     }else{
         exec_once_block_t * p = *glist;
-        while(p->next != 0) p = p->next;
-        p->next = x;
+        if(p->index >  x->index){
+            x->next = p;
+            *glist = x;
+        }else{
+            for(p = *glist; p->next ; p = p->next){
+                if(p->next->index > x->index){
+                    break;
+                }
+            }
+            x->next = p->next;
+            p->next = x;
+        }
     }
 }
 static int is_over(exec_once_tu_t * head)

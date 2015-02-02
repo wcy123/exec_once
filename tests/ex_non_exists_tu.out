@@ -1,12 +1,11 @@
 EXEC_ONCE: cannot resolve dependency for the below TU.
-TU `b`: 2 blocks registered
-  depend on: `no-exists`
-    tests/ex_non_exists_tu.b.c:5: exec_once_0
-    tests/ex_non_exists_tu.b.c:8: exec_once_1
-EXEC_ONCE: cannot resolve dependency for the below TU.
-TU `a`: 2 blocks registered
-  depend on: `no-exists`
+TU `a` depends on: `no-exists`
+   2 blocks registered
     tests/ex_non_exists_tu.a.c:5: exec_once_0
-    tests/ex_non_exists_tu.a.c:8: exec_once_1
+    tests/ex_non_exists_tu.a.c:8: exec_once_2
+EXEC_ONCE: cannot resolve dependency for the below TU.
+TU `b` depends on: `no-exists`
+   2 blocks registered
+    tests/ex_non_exists_tu.b.c:5: exec_once_0
+    tests/ex_non_exists_tu.b.c:8: exec_once_2
 start initalization.
-Aborted

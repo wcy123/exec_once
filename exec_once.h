@@ -15,6 +15,7 @@ typedef struct exec_once_block_s {
     const char * name;
     const char * file;
     int line;
+    int index;
 } exec_once_block_t;
 typedef struct exec_once_tu_s exec_once_tu_t;
 struct exec_once_tu_s {
@@ -50,9 +51,9 @@ static exec_once_block_t * exec_once_list = (void*)0;
 #define EXEC_ONCE_MACRO_STRINGIFY(tag)  #tag
 #define EXEC_ONCE_MACRO_CONCAT(tag,counter)  tag ## counter
 #define EXEC_ONCE_PROGN_UNIQUE_ID(tag,counter)  EXEC_ONCE_MACRO_CONCAT(tag,counter)
-#define EXEC_ONCE_PROGN_WITH_TAG(tag)                                   \
+#define EXEC_ONCE_PROGN_WITH_TAG(tag,counter)                           \
     static void EXEC_ONCE_MACRO_CONCAT(tag, _block)(void);              \
-    __attribute__((constructor))                                        \
+    __attribute__((constructor()))                                      \
     static void EXEC_ONCE_MACRO_CONCAT(tag,_register)()                 \
     {                                                                   \
         static exec_once_block_t x =                                    \
@@ -63,12 +64,13 @@ static exec_once_block_t * exec_once_list = (void*)0;
                     tag)                                                \
                 , __FILE__                                              \
                 , __LINE__                                              \
+                , counter                                               \
             };                                                          \
         exec_once_register(&x,&exec_once_list);                         \
     }                                                                   \
     static void EXEC_ONCE_MACRO_CONCAT(tag, _block)(void)               \
 
-#define EXEC_ONCE_PROGN EXEC_ONCE_PROGN_WITH_TAG(EXEC_ONCE_PROGN_UNIQUE_ID(exec_once_,__COUNTER__))
+#define EXEC_ONCE_PROGN EXEC_ONCE_PROGN_WITH_TAG(EXEC_ONCE_PROGN_UNIQUE_ID(exec_once_,__COUNTER__),__COUNTER__)
 
 #ifndef EXEC_ONCE_DEPENDS
 #define EXEC_ONCE_DEPENDS {0,}
