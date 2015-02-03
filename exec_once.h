@@ -30,6 +30,7 @@ struct exec_once_tu_s {
     exec_once_block_t ** head;
     exec_once_tu_t * next;
     const char ** depend;
+    int num_of_dep;
     int done;
     // for Tarjan algorithm
     int index;
@@ -73,7 +74,7 @@ static exec_once_block_t * exec_once_list = (void*)0;
 #define EXEC_ONCE_PROGN EXEC_ONCE_PROGN_WITH_TAG(EXEC_ONCE_PROGN_UNIQUE_ID(exec_once_,__COUNTER__),__COUNTER__)
 
 #ifndef EXEC_ONCE_DEPENDS
-#define EXEC_ONCE_DEPENDS {0,}
+#define EXEC_ONCE_DEPENDS {}
 #endif
 // no one should invoke this function
 __attribute__((constructor))
@@ -82,7 +83,9 @@ static void dont_invoke_me_exec_once_register_tu()
     static const char * depend [] = EXEC_ONCE_DEPENDS;
     static exec_once_tu_t x = { {0x00,0x00,0x00,0x00},EXEC_ONCE_TU_NAME,
                                 &exec_once_list,
-                                0, depend, 0 };
+                                0,
+                                depend, sizeof(depend)/sizeof(const char*),
+                                0 };
     if(x.name == 0) {
         fprintf(stderr, "EXEC_ONCE_TU_NAME is not defined\n");
         abort();
