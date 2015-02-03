@@ -40,7 +40,7 @@ static void resolve_dependency(exec_once_tu_t * head)
     exec_once_tu_t * p = NULL;
     exec_once_tu_t * q = NULL;
     for(p = head; p ; p = p->next){
-        for(int i = 0; p->depend[i] != 0; ++i){
+        for(int i = 0; i < p->num_of_dep ; ++i){
             if(p->depend[i][0] == '\0'){
                 // dependency is already resolved.
             }else{
@@ -59,7 +59,7 @@ static void check_dependency_exists(exec_once_tu_t * head)
     int ok = 1;
     exec_once_tu_t * p = head;
     for(p = head; p ; p = p->next){
-        for(int i = 0; p->depend[i] != 0; ++i){
+        for(int i = 0; i < p->num_of_dep; ++i){
             if(p->depend[i][0] != '\0'){
                 ok = 0;
                 fprintf(stderr,"EXEC_ONCE: cannot resolve dependency for the below TU.\n");
@@ -109,7 +109,7 @@ static void print_tu(FILE * fp, exec_once_tu_t * p)
     while(blk) {blk=blk->next; c++;};
     fprintf(fp,
             "TU `%s` depends on:" ,p->name);
-    for(int i = 0; p->depend[i] != 0; ++i){
+    for(int i = 0; i < p->num_of_dep; ++i){
         const char * name = p->depend[i][0] == '\0'? ((exec_once_tu_t*)p->depend[i])->name : p->depend[i];
         fprintf(fp," `%s`", name);
     }
@@ -250,7 +250,7 @@ static void execute_tu(exec_once_tu_t* current)
 static int execute_dependency(exec_once_tu_t* p)
 {
     int ret = 1;
-    for(int i = 0; p->depend[i] != 0; ++i){
+    for(int i = 0; i < p->num_of_dep; ++i){
         if(p->depend[i][0] != '\0'){
             fprintf(stderr, "logcial error.\n"); abort();
         }

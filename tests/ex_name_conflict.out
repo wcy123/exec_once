@@ -1,10 +1,11 @@
 EXEC_ONCE: name conflict detected.
 TU `a` depends on:
    2 blocks registered
-    tests/ex_name_conflict.a1.c:4: exec_once_0
-    tests/ex_name_conflict.a1.c:7: exec_once_2
-TU `a` depends on:
-   2 blocks registered
     tests/ex_name_conflict.a2.c:4: exec_once_0
     tests/ex_name_conflict.a2.c:7: exec_once_2
+TU `a` depends on:
+   2 blocks registered
+    tests/ex_name_conflict.a1.c:4: exec_once_0
+    tests/ex_name_conflict.a1.c:7: exec_once_2
 start initalization.
+Aborted
