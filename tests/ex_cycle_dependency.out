@@ -1,2 +1,15 @@
 tests/ex_cycle_dependency_main.c:6:[main] start exec once
-Segmentation fault
+EXEC_ONCE: cycle dependency detected for the following TU.
+TU `tu0` depends on: `tu2` `tu3`
+   2 blocks registered
+    tests/ex_simple_dependency_common.inc:2: exec_once_0
+    tests/ex_simple_dependency_common.inc:6: exec_once_2
+TU `tu1` depends on: `tu0`
+   2 blocks registered
+    tests/ex_simple_dependency_common.inc:2: exec_once_0
+    tests/ex_simple_dependency_common.inc:6: exec_once_2
+TU `tu2` depends on: `tu1`
+   2 blocks registered
+    tests/ex_simple_dependency_common.inc:2: exec_once_0
+    tests/ex_simple_dependency_common.inc:6: exec_once_2
+Aborted
