@@ -178,7 +178,7 @@ static void strongconnect(int * index, exec_once_tu_t **S, exec_once_tu_t * v, i
       end if
     end for
 */
-    for(int i = 0; v->depend[i] != 0; ++i){
+    for(int i = 0; i < v->num_of_dep ; ++i){
         exec_once_tu_t* w = (exec_once_tu_t*)v->depend[i];
         if(w->index == -1){
             strongconnect(index, S, w, ok);
